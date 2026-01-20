@@ -1,0 +1,21 @@
+# Azure Functions へ関数をデプロイするワークフロー
+name: Deploy API to Azure Functions
+
+# 手動トリガー (workflow_dispatch) でデプロイを実行
+on:
+  workflow_dispatch:
+    inputs:
+      functionName:
+        description: 'Name of the Azure Function to deploy'
+        required: true
+        default: 'my-function-app'
+
+# OIDC 認証に必要な権限設定
+permissions:
+  id-token: write    # Azure へのフェデレーション認証に必要
+  contents: read     # リポジトリの読み取りアクセス
+
+jobs:
+  # ビルドジョブ: 依存関係をインストールしてアーティファクトを作成
+  build:
+    runs-on: ubuntu-latest
