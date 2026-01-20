@@ -2,48 +2,48 @@
 # Licensed under the MIT License.
 <#
 .SYNOPSIS
-    Configures Microsoft Entra External ID for Just-In-Time (JIT) password migration.
+    Microsoft Entra External ID の Just-In-Time (JIT) パスワード移行を構成します。
 
 .DESCRIPTION
-    This script automates the configuration of app registrations, custom authentication extensions,
-    and event listeners in Microsoft Entra External ID to enable JIT password migration.
+    このスクリプトは、JIT パスワード移行を有効にするために、Microsoft Entra External ID の
+    アプリ登録、カスタム認証拡張機能、およびイベント リスナーの構成を自動化します。
     
-    The script performs the following steps:
-    1. Authenticates using device code flow (assumes admin privileges)
-    2. Creates/configures custom authentication extension app registration
-    3. Exports and configures encryption certificate public key
-    4. Creates custom extension policy
-    5. Creates client application for testing
-    6. Creates event listener policy
+    スクリプトは以下の手順を実行します:
+    1. デバイス コード フローを使用して認証（管理者権限を前提）
+    2. カスタム認証拡張機能のアプリ登録を作成/構成
+    3. 暗号化証明書の公開キーをエクスポートして構成
+    4. カスタム拡張機能ポリシーを作成
+    5. テスト用クライアント アプリケーションを作成
+    6. イベント リスナー ポリシーを作成
     
-    This follows the official Microsoft documentation for External ID JIT migration.
+    このスクリプトは External ID JIT 移行に関する Microsoft の公式ドキュメントに従っています。
 
 .PARAMETER TenantId
-    The External ID tenant ID where the configuration will be applied.
+    構成を適用する External ID テナント ID。
 
 .PARAMETER CertificatePath
-    Path to the certificate file (.cer format) for encrypting password payloads.
-    This should be exported from your Key Vault (JitMigrationEncryptionCert).
+    パスワード ペイロードを暗号化するための証明書ファイル（.cer 形式）へのパス。
+    Key Vault (JitMigrationEncryptionCert) からエクスポートしたものを使用してください。
 
 .PARAMETER FunctionUrl
-    The URL of your Azure Function endpoint for JIT authentication.
-    Example: https://contoso.azurewebsites.net/api/JitAuthentication
+    JIT 認証用の Azure Function エンドポイントの URL。
+    例: https://contoso.azurewebsites.net/api/JitAuthentication
 
 .PARAMETER ExtensionAppName
-    Name for the custom authentication extension app registration.
-    Default: "EEID Auth Extension - JIT Migration"
+    カスタム認証拡張機能のアプリ登録の名前。
+    既定値: "EEID Auth Extension - JIT Migration"
 
 .PARAMETER ClientAppName
-    Name for the test client application.
-    Default: "JIT Migration Test Client"
+    テスト用クライアント アプリケーションの名前。
+    既定値: "JIT Migration Test Client"
 
 .PARAMETER MigrationPropertyId
-    The extension attribute ID for tracking migration status.
-    Format: extension_{ExtensionAppId}_RequiresMigration
-    If not provided, you'll be prompted to enter it.
+    移行ステータスを追跡するための拡張属性 ID。
+    形式: extension_{ExtensionAppId}_RequiresMigration
+    指定しない場合は、入力を求められます。
 
 .PARAMETER SkipClientApp
-    Skip creating the test client application if it already exists.
+    テスト用クライアント アプリケーションが既に存在する場合、作成をスキップします。
 
 .EXAMPLE
     .\Configure-ExternalIdJit.ps1 -TenantId "your-tenant-id" `
@@ -51,7 +51,7 @@
         -FunctionUrl "https://contoso.azurewebsites.net/api/JitAuthentication" `
         -MigrationPropertyId "extension_12345678_RequiresMigration"
     
-    Configures External ID for JIT migration with the specified parameters.
+    指定されたパラメーターで JIT 移行用に External ID を構成します。
 
 .EXAMPLE
     .\Configure-ExternalIdJit.ps1 -TenantId "your-tenant-id" `
@@ -59,16 +59,16 @@
         -FunctionUrl "https://contoso.azurewebsites.net/api/JitAuthentication" `
         -SkipClientApp
     
-    Configures External ID but skips client app creation.
+    クライアント アプリの作成をスキップして External ID を構成します。
 
 .NOTES
-    Prerequisites:
-    - PowerShell 7.0 or later
-    - User must have admin privileges in the External ID tenant
-    - Certificate must be exported from Key Vault in CER format
-    - Azure Function must be deployed and accessible
+    前提条件:
+    - PowerShell 7.0 以降
+    - External ID テナントの管理者権限を持つユーザー
+    - CER 形式で Key Vault からエクスポートされた証明書
+    - デプロイ済みでアクセス可能な Azure Function
     
-    Required Permissions (granted during device code flow):
+    必要なアクセス許可（デバイス コード フロー中に付与）:
     - Application.ReadWrite.All
     - CustomAuthenticationExtension.ReadWrite.All
     - User.Read
@@ -76,17 +76,17 @@
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true, HelpMessage = "External ID tenant ID")]
+    [Parameter(Mandatory = $true, HelpMessage = "External ID テナント ID")]
     [string]$TenantId,
 
-    [Parameter(Mandatory = $true, HelpMessage = "Path to certificate file (.cer format)")]
+    [Parameter(Mandatory = $true, HelpMessage = "証明書ファイル（.cer 形式）へのパス")]
     [ValidateScript({
         if (Test-Path $_) { $true }
-        else { throw "Certificate file not found: $_" }
+        else { throw "証明書ファイルが見つかりません: $_" }
     })]
     [string]$CertificatePath,
 
-    [Parameter(Mandatory = $true, HelpMessage = "Azure Function URL for JIT authentication")]
+    [Parameter(Mandatory = $true, HelpMessage = "JIT 認証用の Azure Function URL")]
     [ValidatePattern('^https://.*')]
     [string]$FunctionUrl,
 
@@ -106,7 +106,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 # ============================================================================
-# Helper Functions
+# ヘルパー関数
 # ============================================================================
 
 function Write-Header {
@@ -178,11 +178,11 @@ function Invoke-GraphRequest {
         return $response
     }
     catch {
-        Write-ErrorMsg "Graph API request failed: $($_.Exception.Message)"
+        Write-ErrorMsg "Graph API リクエストが失敗しました: $($_.Exception.Message)"
         if ($_.Exception.Response) {
             $reader = [System.IO.StreamReader]::new($_.Exception.Response.GetResponseStream())
             $responseBody = $reader.ReadToEnd()
-            Write-Host "Response: $responseBody" -ForegroundColor Red
+            Write-Host "レスポンス: $responseBody" -ForegroundColor Red
         }
         throw
     }
@@ -194,12 +194,12 @@ function Get-DeviceCodeAccessToken {
         [string[]]$Scopes
     )
     
-    Write-Info "Initiating device code authentication flow..."
-    Write-Step "Tenant: $TenantId"
-    Write-Step "Scopes: $($Scopes -join ', ')"
+    Write-Info "デバイス コード認証フローを開始しています..."
+    Write-Step "テナント: $TenantId"
+    Write-Step "スコープ: $($Scopes -join ', ')"
     Write-Host ""
     
-    # Request device code
+    # デバイス コードを要求
     $clientId = "14d82eec-204b-4c2f-b7e8-296a70dab67e"  # Microsoft Graph Command Line Tools
     $scopeString = ($Scopes -join ' ')
     
@@ -216,21 +216,21 @@ function Get-DeviceCodeAccessToken {
         $deviceCodeResponse = Invoke-RestMethod @deviceCodeParams
     }
     catch {
-        Write-ErrorMsg "Failed to get device code: $($_.Exception.Message)"
+        Write-ErrorMsg "デバイス コードの取得に失敗しました: $($_.Exception.Message)"
         throw
     }
     
-    # Display device code instructions
+    # デバイス コードの手順を表示
     Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
-    Write-Host "  AUTHENTICATION REQUIRED" -ForegroundColor Yellow
+    Write-Host "  認証が必要です" -ForegroundColor Yellow
     Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
     Write-Host ""
     Write-Host $deviceCodeResponse.message -ForegroundColor White
     Write-Host ""
-    Write-Host "Waiting for authentication..." -ForegroundColor Gray
+    Write-Host "認証を待機しています..." -ForegroundColor Gray
     Write-Host ""
     
-    # Poll for token
+    # トークンをポーリング
     $tokenParams = @{
         Method = 'POST'
         Uri = "https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token"
@@ -249,42 +249,42 @@ function Get-DeviceCodeAccessToken {
         
         try {
             $tokenResponse = Invoke-RestMethod @tokenParams
-            Write-Success "Successfully authenticated!"
+            Write-Success "認証に成功しました！"
             Write-Host ""
             return $tokenResponse.access_token
         }
         catch {
             $errorResponse = $_.ErrorDetails.Message | ConvertFrom-Json
             if ($errorResponse.error -eq "authorization_pending") {
-                # Still waiting for user to authenticate
+                # ユーザーの認証を待機中
                 continue
             }
             elseif ($errorResponse.error -eq "authorization_declined") {
-                Write-ErrorMsg "Authentication was declined by user"
-                throw "Authentication declined"
+                Write-ErrorMsg "ユーザーによって認証が拒否されました"
+                throw "認証が拒否されました"
             }
             elseif ($errorResponse.error -eq "expired_token") {
-                Write-ErrorMsg "Device code expired"
-                throw "Device code expired"
+                Write-ErrorMsg "デバイス コードの有効期限が切れました"
+                throw "デバイス コードの有効期限切れ"
             }
             else {
-                Write-ErrorMsg "Token request failed: $($errorResponse.error_description)"
+                Write-ErrorMsg "トークン リクエストが失敗しました: $($errorResponse.error_description)"
                 throw
             }
         }
     }
     
-    Write-ErrorMsg "Authentication timed out"
-    throw "Authentication timeout"
+    Write-ErrorMsg "認証がタイムアウトしました"
+    throw "認証タイムアウト"
 }
 
 # ============================================================================
-# Main Script
+# メイン スクリプト
 # ============================================================================
 
-Write-Header "External ID JIT Migration Configuration"
+Write-Header "External ID JIT 移行構成"
 
-Write-Info "Configuration Parameters:"
+Write-Info "構成パラメーター:"
 Write-Step "Tenant ID: $TenantId"
 Write-Step "Certificate: $CertificatePath"
 Write-Step "Function URL: $FunctionUrl"
@@ -294,8 +294,8 @@ if (-not $SkipClientApp) {
 }
 Write-Host ""
 
-# Step 0: Authenticate using device code flow
-Write-Header "Step 1: Authentication"
+# ステップ 0: デバイス コード フローを使用して認証
+Write-Header "ステップ 1: 認証"
 
 $requiredScopes = @(
     "https://graph.microsoft.com/Application.ReadWrite.All",
@@ -305,33 +305,33 @@ $requiredScopes = @(
 
 $accessToken = Get-DeviceCodeAccessToken -TenantId $TenantId -Scopes $requiredScopes
 
-# Verify authentication by getting current user
+# 現在のユーザーを取得して認証を確認
 try {
     $me = Invoke-GraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/me" -AccessToken $accessToken
-    Write-Success "Authenticated as: $($me.userPrincipalName)"
+    Write-Success "認証済み: $($me.userPrincipalName)"
     Write-Host ""
 }
 catch {
-    Write-ErrorMsg "Failed to verify authentication"
+    Write-ErrorMsg "認証の確認に失敗しました"
     exit 1
 }
 
-# Step 1: Create or update custom authentication extension app registration
-Write-Header "Step 2: Configure Custom Authentication Extension App"
+# ステップ 1: カスタム認証拡張機能のアプリ登録を作成または更新
+Write-Header "ステップ 2: カスタム認証拡張機能アプリの構成"
 
-Write-Info "Creating app registration: $ExtensionAppName"
+Write-Info "アプリ登録を作成しています: $ExtensionAppName"
 
-# Check if app already exists
+# アプリが既に存在するか確認
 $existingApps = Invoke-GraphRequest -Method GET `
     -Uri "https://graph.microsoft.com/v1.0/applications?`$filter=displayName eq '$ExtensionAppName'" `
     -AccessToken $accessToken
 
 if ($existingApps.value.Count -gt 0) {
-    Write-Warning "App registration already exists"
+    Write-Warning "アプリ登録は既に存在します"
     $app = $existingApps.value[0]
-    Write-Step "Using existing app: $($app.appId)"
+    Write-Step "既存のアプリを使用: $($app.appId)"
 } else {
-    # Create new app registration
+    # 新しいアプリ登録を作成
     $appBody = @{
         displayName = $ExtensionAppName
         signInAudience = "AzureADMyOrg"
@@ -353,20 +353,20 @@ if ($existingApps.value.Count -gt 0) {
         -Body $appBody `
         -AccessToken $accessToken
     
-    Write-Success "App registration created"
-    Write-Step "App ID: $($app.appId)"
-    Write-Step "Object ID: $($app.id)"
+    Write-Success "アプリ登録が作成されました"
+    Write-Step "アプリ ID: $($app.appId)"
+    Write-Step "オブジェクト ID: $($app.id)"
 }
 
 $extensionAppId = $app.appId
 $extensionAppObjectId = $app.id
 
-# Extract hostname from Function URL
+# Function URL からホスト名を抽出
 $functionUri = [System.Uri]$FunctionUrl
 $functionHostname = $functionUri.Host
 
-# Configure identifier URI
-Write-Info "Configuring identifier URI..."
+# 識別子 URI を構成
+Write-Info "識別子 URI を構成しています..."
 $identifierUri = "api://$functionHostname/$extensionAppId"
 
 $updateAppBody = @{
@@ -378,41 +378,41 @@ Invoke-GraphRequest -Method PATCH `
     -Body $updateAppBody `
     -AccessToken $accessToken
 
-Write-Success "Identifier URI configured: $identifierUri"
+Write-Success "識別子 URI が構成されました: $identifierUri"
 
-# Grant admin consent for API permissions
-Write-Info "Granting admin consent for API permissions..."
-Write-Warning "Please grant admin consent manually in the Azure Portal:"
-Write-Step "Navigate to: Azure Portal → App registrations → $ExtensionAppName"
-Write-Step "Go to: API permissions → Grant admin consent for [Your Tenant]"
+# API アクセス許可の管理者同意を付与
+Write-Info "API アクセス許可の管理者同意を付与しています..."
+Write-Warning "Azure Portal で手動で管理者同意を付与してください:"
+Write-Step "移動先: Azure Portal → アプリの登録 → $ExtensionAppName"
+Write-Step "操作: API のアクセス許可 → [テナント名] に管理者の同意を与える"
 Write-Host ""
-$consent = Read-Host "Press Enter after granting admin consent (or 's' to skip)"
+$consent = Read-Host "管理者同意を付与した後、Enter を押してください（または 's' でスキップ）"
 if ($consent -ne 's') {
-    Write-Success "Admin consent confirmed"
+    Write-Success "管理者同意が確認されました"
 }
 
-# Step 2: Configure encryption certificate
-Write-Header "Step 3: Configure Encryption Certificate"
+# ステップ 2: 暗号化証明書を構成
+Write-Header "ステップ 3: 暗号化証明書の構成"
 
-Write-Info "Loading certificate from: $CertificatePath"
+Write-Info "証明書を読み込んでいます: $CertificatePath"
 
 try {
     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($CertificatePath)
     $certBase64 = [Convert]::ToBase64String($cert.RawData)
-    Write-Success "Certificate loaded successfully"
-    Write-Step "Subject: $($cert.Subject)"
-    Write-Step "Valid from: $($cert.NotBefore)"
-    Write-Step "Valid to: $($cert.NotAfter)"
+    Write-Success "証明書が正常に読み込まれました"
+    Write-Step "サブジェクト: $($cert.Subject)"
+    Write-Step "有効開始日: $($cert.NotBefore)"
+    Write-Step "有効終了日: $($cert.NotAfter)"
 }
 catch {
-    Write-ErrorMsg "Failed to load certificate: $($_.Exception.Message)"
+    Write-ErrorMsg "証明書の読み込みに失敗しました: $($_.Exception.Message)"
     exit 1
 }
 
-# Generate a new GUID for the key
+# キー用の新しい GUID を生成
 $keyGuid = [guid]::NewGuid().ToString()
 
-Write-Info "Configuring encryption key on app registration..."
+Write-Info "アプリ登録に暗号化キーを構成しています..."
 
 $keyCredentialsBody = @{
     keyCredentials = @(
@@ -434,13 +434,13 @@ Invoke-GraphRequest -Method PATCH `
     -Body $keyCredentialsBody `
     -AccessToken $accessToken
 
-Write-Success "Encryption certificate configured"
-Write-Step "Key ID: $keyGuid"
+Write-Success "暗号化証明書が構成されました"
+Write-Step "キー ID: $keyGuid"
 
-# Step 3: Create custom extension policy
-Write-Header "Step 4: Create Custom Authentication Extension Policy"
+# ステップ 3: カスタム拡張機能ポリシーを作成
+Write-Header "ステップ 4: カスタム認証拡張機能ポリシーの作成"
 
-Write-Info "Creating custom authentication extension..."
+Write-Info "カスタム認証拡張機能を作成しています..."
 
 $extensionBody = @{
     "@odata.type" = "#microsoft.graph.onPasswordSubmitCustomExtension"
@@ -466,13 +466,13 @@ try {
         -Body $extensionBody `
         -AccessToken $accessToken
     
-    Write-Success "Custom authentication extension created"
-    Write-Step "Extension ID: $($customExtension.id)"
+    Write-Success "カスタム認証拡張機能が作成されました"
+    Write-Step "拡張機能 ID: $($customExtension.id)"
     $customExtensionId = $customExtension.id
 }
 catch {
-    Write-ErrorMsg "Failed to create custom extension"
-    Write-Info "Checking if extension already exists..."
+    Write-ErrorMsg "カスタム拡張機能の作成に失敗しました"
+    Write-Info "拡張機能が既に存在するか確認しています..."
     
     $existingExtensions = Invoke-GraphRequest -Method GET `
         -Uri "https://graph.microsoft.com/beta/identity/customAuthenticationExtensions" `
@@ -481,38 +481,38 @@ catch {
     $matchingExtension = $existingExtensions.value | Where-Object { $_.displayName -eq "OnPasswordSubmitCustomExtension" }
     
     if ($matchingExtension) {
-        Write-Warning "Using existing custom extension"
+        Write-Warning "既存のカスタム拡張機能を使用します"
         $customExtensionId = $matchingExtension.id
-        Write-Step "Extension ID: $customExtensionId"
+        Write-Step "拡張機能 ID: $customExtensionId"
         
-        # Update the existing extension
-        Write-Info "Updating custom extension configuration..."
+        # 既存の拡張機能を更新
+        Write-Info "カスタム拡張機能の構成を更新しています..."
         Invoke-GraphRequest -Method PATCH `
             -Uri "https://graph.microsoft.com/beta/identity/customAuthenticationExtensions/$customExtensionId" `
             -Body $extensionBody `
             -AccessToken $accessToken
-        Write-Success "Custom extension updated"
+        Write-Success "カスタム拡張機能が更新されました"
     }
     else {
         throw
     }
 }
 
-# Step 4: Create client application for testing
+# ステップ 4: テスト用クライアント アプリケーションを作成
 if (-not $SkipClientApp) {
-    Write-Header "Step 5: Create Test Client Application"
+    Write-Header "ステップ 5: テスト用クライアント アプリケーションの作成"
     
-    Write-Info "Creating client app registration: $ClientAppName"
+    Write-Info "クライアント アプリ登録を作成しています: $ClientAppName"
     
-    # Check if client app already exists
+    # クライアント アプリが既に存在するか確認
     $existingClientApps = Invoke-GraphRequest -Method GET `
         -Uri "https://graph.microsoft.com/v1.0/applications?`$filter=displayName eq '$ClientAppName'" `
         -AccessToken $accessToken
     
     if ($existingClientApps.value.Count -gt 0) {
-        Write-Warning "Client app already exists"
+        Write-Warning "クライアント アプリは既に存在します"
         $clientApp = $existingClientApps.value[0]
-        Write-Step "Using existing app: $($clientApp.appId)"
+        Write-Step "既存のアプリを使用: $($clientApp.appId)"
     } else {
         $clientAppBody = @{
             displayName = $ClientAppName
@@ -541,58 +541,58 @@ if (-not $SkipClientApp) {
             -Body $clientAppBody `
             -AccessToken $accessToken
         
-        Write-Success "Client app created"
-        Write-Step "App ID: $($clientApp.appId)"
-        Write-Step "Object ID: $($clientApp.id)"
-        Write-Step "Redirect URI: https://jwt.ms"
+        Write-Success "クライアント アプリが作成されました"
+        Write-Step "アプリ ID: $($clientApp.appId)"
+        Write-Step "オブジェクト ID: $($clientApp.id)"
+        Write-Step "リダイレクト URI: https://jwt.ms"
     }
     
     $clientAppId = $clientApp.appId
     
-    Write-Info "Granting admin consent for User.Read..."
-    Write-Warning "Please grant admin consent manually in the Azure Portal:"
-    Write-Step "Navigate to: Azure Portal → App registrations → $ClientAppName"
-    Write-Step "Go to: API permissions → Grant admin consent for [Your Tenant]"
+    Write-Info "User.Read の管理者同意を付与しています..."
+    Write-Warning "Azure Portal で手動で管理者同意を付与してください:"
+    Write-Step "移動先: Azure Portal → アプリの登録 → $ClientAppName"
+    Write-Step "操作: API のアクセス許可 → [テナント名] に管理者の同意を与える"
     Write-Host ""
-    $consent = Read-Host "Press Enter after granting admin consent (or 's' to skip)"
+    $consent = Read-Host "管理者同意を付与した後、Enter を押してください（または 's' でスキップ）"
     if ($consent -ne 's') {
-        Write-Success "Admin consent confirmed"
+        Write-Success "管理者同意が確認されました"
     }
 } else {
-    Write-Header "Step 5: Skipping Client Application Creation"
-    Write-Info "You can create a client app later or use an existing one"
+    Write-Header "ステップ 5: クライアント アプリケーションの作成をスキップ"
+    Write-Info "クライアント アプリは後で作成するか、既存のものを使用できます"
     
-    # Prompt for existing client app ID
+    # 既存のクライアント アプリ ID の入力を促す
     Write-Host ""
-    $clientAppId = Read-Host "Enter the client app ID for listener configuration (or press Enter to skip listener creation)"
+    $clientAppId = Read-Host "リスナー構成用のクライアント アプリ ID を入力してください（Enter でリスナー作成をスキップ）"
     
     if ([string]::IsNullOrWhiteSpace($clientAppId)) {
-        Write-Warning "Skipping listener creation - no client app ID provided"
+        Write-Warning "リスナー作成をスキップします - クライアント アプリ ID が提供されていません"
         $skipListener = $true
     }
 }
 
-# Step 5: Create event listener policy
+# ステップ 5: イベント リスナー ポリシーを作成
 if (-not $skipListener) {
-    Write-Header "Step 6: Create Event Listener Policy"
+    Write-Header "ステップ 6: イベント リスナー ポリシーの作成"
     
-    # Prompt for migration property ID if not provided
+    # 移行プロパティ ID が提供されていない場合は入力を促す
     if ([string]::IsNullOrWhiteSpace($MigrationPropertyId)) {
         Write-Host ""
-        Write-Info "Migration property ID is required for the event listener"
-        Write-Step "Format: extension_{ExtensionAppId}_RequiresMigration"
-        Write-Step "Example: extension_12345678901234567890123456789012_RequiresMigration"
+        Write-Info "イベント リスナーには移行プロパティ ID が必要です"
+        Write-Step "形式: extension_{ExtensionAppId}_RequiresMigration"
+        Write-Step "例: extension_12345678901234567890123456789012_RequiresMigration"
         Write-Host ""
-        $MigrationPropertyId = Read-Host "Enter the migration property ID"
+        $MigrationPropertyId = Read-Host "移行プロパティ ID を入力してください"
         
         if ([string]::IsNullOrWhiteSpace($MigrationPropertyId)) {
-            Write-ErrorMsg "Migration property ID is required"
+            Write-ErrorMsg "移行プロパティ ID は必須です"
             exit 1
         }
     }
     
-    Write-Info "Creating event listener for client app: $clientAppId"
-    Write-Step "Migration property: $MigrationPropertyId"
+    Write-Info "クライアント アプリ用のイベント リスナーを作成しています: $clientAppId"
+    Write-Step "移行プロパティ: $MigrationPropertyId"
     
     $listenerBody = @{
         "@odata.type" = "#microsoft.graph.onPasswordSubmitListener"
@@ -622,74 +622,74 @@ if (-not $skipListener) {
             -Body $listenerBody `
             -AccessToken $accessToken
         
-        Write-Success "Event listener created"
-        Write-Step "Listener ID: $($listener.id)"
+        Write-Success "イベント リスナーが作成されました"
+        Write-Step "リスナー ID: $($listener.id)"
     }
     catch {
-        Write-ErrorMsg "Failed to create event listener"
-        Write-Info "You may need to create the listener manually or update an existing one"
-        Write-Step "Client App ID: $clientAppId"
-        Write-Step "Custom Extension ID: $customExtensionId"
-        Write-Step "Migration Property: $MigrationPropertyId"
+        Write-ErrorMsg "イベント リスナーの作成に失敗しました"
+        Write-Info "リスナーを手動で作成するか、既存のものを更新する必要がある場合があります"
+        Write-Step "クライアント アプリ ID: $clientAppId"
+        Write-Step "カスタム拡張機能 ID: $customExtensionId"
+        Write-Step "移行プロパティ: $MigrationPropertyId"
     }
 }
 
-# Summary
-Write-Header "Configuration Complete!"
+# サマリー
+Write-Header "構成が完了しました！"
 
-Write-Success "JIT Migration has been configured successfully"
+Write-Success "JIT 移行が正常に構成されました"
 Write-Host ""
 
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
-Write-Host "  CONFIGURATION SUMMARY" -ForegroundColor Green
+Write-Host "  構成サマリー" -ForegroundColor Green
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
 Write-Host ""
-Write-Host "Custom Extension App:" -ForegroundColor Cyan
-Write-Step "App ID: $extensionAppId"
-Write-Step "Object ID: $extensionAppObjectId"
-Write-Step "Identifier URI: $identifierUri"
+Write-Host "カスタム拡張機能アプリ:" -ForegroundColor Cyan
+Write-Step "アプリ ID: $extensionAppId"
+Write-Step "オブジェクト ID: $extensionAppObjectId"
+Write-Step "識別子 URI: $identifierUri"
 Write-Host ""
-Write-Host "Custom Authentication Extension:" -ForegroundColor Cyan
-Write-Step "Extension ID: $customExtensionId"
-Write-Step "Target URL: $FunctionUrl"
+Write-Host "カスタム認証拡張機能:" -ForegroundColor Cyan
+Write-Step "拡張機能 ID: $customExtensionId"
+Write-Step "ターゲット URL: $FunctionUrl"
 Write-Host ""
 if (-not $SkipClientApp -and $clientAppId) {
-    Write-Host "Test Client App:" -ForegroundColor Cyan
-    Write-Step "App ID: $clientAppId"
-    Write-Step "Redirect URI: https://jwt.ms"
+    Write-Host "テスト用クライアント アプリ:" -ForegroundColor Cyan
+    Write-Step "アプリ ID: $clientAppId"
+    Write-Step "リダイレクト URI: https://jwt.ms"
     Write-Host ""
 }
 if (-not $skipListener) {
-    Write-Host "Event Listener:" -ForegroundColor Cyan
-    Write-Step "Migration Property: $MigrationPropertyId"
-    Write-Step "Client App ID: $clientAppId"
+    Write-Host "イベント リスナー:" -ForegroundColor Cyan
+    Write-Step "移行プロパティ: $MigrationPropertyId"
+    Write-Step "クライアント アプリ ID: $clientAppId"
     Write-Host ""
 }
 
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
-Write-Host "  NEXT STEPS" -ForegroundColor Yellow
+Write-Host "  次のステップ" -ForegroundColor Yellow
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "1. Verify Azure Function Configuration:" -ForegroundColor White
-Write-Step "Ensure the Function App has the correct settings for JIT authentication"
-Write-Step "Verify the Function App can access the private key from Key Vault"
+Write-Host "1. Azure Function の構成を確認:" -ForegroundColor White
+Write-Step "Function App に JIT 認証の正しい設定があることを確認してください"
+Write-Step "Function App が Key Vault から秘密キーにアクセスできることを確認してください"
 Write-Host ""
-Write-Host "2. Test the Configuration:" -ForegroundColor White
-Write-Step "Navigate to: https://jwt.ms"
-Write-Step "Sign in with a user that has the migration flag set"
-Write-Step "Verify the JIT function is called and password is validated"
+Write-Host "2. 構成のテスト:" -ForegroundColor White
+Write-Step "移動先: https://jwt.ms"
+Write-Step "移行フラグが設定されたユーザーでサインインしてください"
+Write-Step "JIT 関数が呼び出され、パスワードが検証されることを確認してください"
 Write-Host ""
-Write-Host "3. Monitor and Validate:" -ForegroundColor White
-Write-Step "Check Azure Function logs for successful password validation"
-Write-Step "Verify user migration status is updated after first login"
-Write-Step "Monitor Application Insights for errors or issues"
+Write-Host "3. 監視と検証:" -ForegroundColor White
+Write-Step "Azure Function のログでパスワード検証が成功していることを確認してください"
+Write-Step "初回ログイン後にユーザーの移行ステータスが更新されることを確認してください"
+Write-Step "Application Insights でエラーや問題を監視してください"
 Write-Host ""
-Write-Host "4. Before Production Deployment:" -ForegroundColor White
-Write-Step "Test with multiple user accounts"
-Write-Step "Verify error handling and retry logic"
-Write-Step "Ensure all security requirements are met"
-Write-Step "Review and test the rollback plan"
+Write-Host "4. 本番デプロイ前:" -ForegroundColor White
+Write-Step "複数のユーザー アカウントでテストしてください"
+Write-Step "エラー処理とリトライ ロジックを確認してください"
+Write-Step "すべてのセキュリティ要件が満たされていることを確認してください"
+Write-Step "ロールバック計画を確認してテストしてください"
 Write-Host ""
 
-Write-Info "For detailed documentation, see: https://learn.microsoft.com/entra/external-id"
-Write-Host ""
+Write-Info "詳細なドキュメントはこちらを参照: https://learn.microsoft.com/entra/external-id"
+Write-Host """

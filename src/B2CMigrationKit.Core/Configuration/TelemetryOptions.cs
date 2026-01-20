@@ -3,56 +3,56 @@
 namespace B2CMigrationKit.Core.Configuration;
 
 /// <summary>
-/// Configuration options for telemetry and observability.
+/// テレメトリと可観測性の構成オプション。
 /// </summary>
 public class TelemetryOptions
 {
     /// <summary>
-    /// Gets or sets the Application Insights connection string.
+    /// Application Insights の接続文字列を取得または設定します。
     /// </summary>
     public string? ConnectionString { get; set; }
 
     /// <summary>
-    /// Gets or sets the Application Insights instrumentation key (legacy).
+    /// Application Insights のインストルメンテーション キーを取得または設定します（レガシー）。
     /// </summary>
     public string? InstrumentationKey { get; set; }
 
     /// <summary>
-    /// Gets or sets whether telemetry is enabled (default: true).
+    /// テレメトリが有効かどうかを取得または設定します（既定値: true）。
     /// </summary>
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets whether to use Application Insights SDK for telemetry.
-    /// When false, only console logging is used (useful for local development).
-    /// Default: false (console only).
+    /// テレメトリに Application Insights SDK を使用するかどうかを取得または設定します。
+    /// false の場合、コンソール ログのみが使用されます（ローカル開発に便利）。
+    /// 既定値: false（コンソールのみ）。
     /// </summary>
     public bool UseApplicationInsights { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets whether to enable console logging.
-    /// Can be used simultaneously with Application Insights.
-    /// Default: true (always log to console).
+    /// コンソール ログを有効にするかどうかを取得または設定します。
+    /// Application Insights と同時に使用できます。
+    /// 既定値: true（常にコンソールにログ出力）。
     /// </summary>
     public bool UseConsoleLogging { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the sampling rate percentage (default: 100).
+    /// サンプリング レートのパーセンテージを取得または設定します（既定値: 100）。
     /// </summary>
     public double SamplingPercentage { get; set; } = 100.0;
 
     /// <summary>
-    /// Gets or sets whether to track dependencies (default: true).
+    /// 依存関係を追跡するかどうかを取得または設定します（既定値: true）。
     /// </summary>
     public bool TrackDependencies { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets whether to track exceptions (default: true).
+    /// 例外を追跡するかどうかを取得または設定します（既定値: true）。
     /// </summary>
     public bool TrackExceptions { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets custom properties to include with all telemetry.
+    /// すべてのテレメトリに含めるカスタム プロパティを取得または設定します。
     /// </summary>
     public Dictionary<string, string> GlobalProperties { get; set; } = new();
 }

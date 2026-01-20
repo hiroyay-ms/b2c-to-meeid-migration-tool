@@ -3,28 +3,28 @@
 namespace B2CMigrationKit.Core.Configuration;
 
 /// <summary>
-/// Configuration options for export operations.
+/// エクスポート操作の構成オプション。
 /// </summary>
 public class ExportOptions
 {
     /// <summary>
-    /// Gets or sets the fields to select from B2C during export.
-    /// Comma-separated list of field names (e.g., "id,userPrincipalName,displayName").
-    /// Default includes standard fields + identities.
+    /// エクスポート時に B2C から選択するフィールドを取得または設定します。
+    /// カンマ区切りのフィールド名リスト（例: "id,userPrincipalName,displayName"）。
+    /// 既定値には標準フィールド + identities が含まれます。
     /// </summary>
     public string SelectFields { get; set; } = "id,userPrincipalName,displayName,givenName,surname,mail,mobilePhone,identities";
 
     /// <summary>
-    /// Gets or sets the maximum number of users to export.
-    /// If null or 0, exports all users. Useful for testing with limited datasets.
+    /// エクスポートするユーザーの最大数を取得または設定します。
+    /// null または 0 の場合、すべてのユーザーをエクスポートします。制限されたデータセットでのテストに便利です。
     /// </summary>
     public int? MaxUsers { get; set; }
 
     /// <summary>
-    /// Gets or sets a filter pattern for user displayName or userPrincipalName.
-    /// If specified, only users whose displayName or userPrincipalName contains this value will be exported.
-    /// Case-insensitive. Examples: "MigTest", "contoso", "john.doe"
-    /// If null or empty, exports all users (subject to MaxUsers limit).
+    /// ユーザーの displayName または userPrincipalName のフィルター パターンを取得または設定します。
+    /// 指定した場合、displayName または userPrincipalName にこの値を含むユーザーのみがエクスポートされます。
+    /// 大文字小文字を区別しません。例: "MigTest", "contoso", "john.doe"
+    /// null または空の場合、すべてのユーザーをエクスポートします（MaxUsers 制限に従います）。
     /// </summary>
     public string? FilterPattern { get; set; }
 }

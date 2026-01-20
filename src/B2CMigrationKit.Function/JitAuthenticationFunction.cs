@@ -17,8 +17,8 @@ using System.Text.Json;
 namespace B2CMigrationKit.Function;
 
 /// <summary>
-/// Azure Function for Just-In-Time user migration during login.
-/// Invoked by External ID Custom Authentication Extension (OnPasswordSubmit event).
+/// ログイン時の Just-In-Time ユーザー移行用 Azure Function。
+/// External ID カスタム認証拡張機能（OnPasswordSubmit イベント）によって呼び出されます。
 /// </summary>
 public class JitAuthenticationFunction
 {
@@ -28,7 +28,7 @@ public class JitAuthenticationFunction
     private readonly MigrationOptions _migrationOptions;
     private readonly ILogger<JitAuthenticationFunction> _logger;
 
-    // Cached RSA private key (loaded from Key Vault or inline config)
+    // キャッシュされた RSA 秘密キー（Key Vault またはインライン構成から読み込み）
     private string? _cachedPrivateKey;
     private readonly SemaphoreSlim _keyLoadLock = new(1, 1);
 
@@ -44,7 +44,7 @@ public class JitAuthenticationFunction
         _migrationOptions = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _jitOptions = options?.Value?.JitAuthentication ?? throw new ArgumentNullException(nameof(options));
 
-        // Validate configuration
+        // 構成の検証
         if (_jitOptions.UseKeyVault && _secretProvider == null)
         {
             throw new InvalidOperationException(
@@ -75,7 +75,7 @@ public class JitAuthenticationFunction
             "[JIT Function] HTTP {Method} received | RequestId: {RequestId} | RemoteIP: {RemoteIP}",
             req.Method, requestId, remoteIp);
 
-        // Handle GET request - used by External ID to validate the endpoint
+        // GET リクエストの処理 - External ID がエンドポイントを検証するために使用
         if (req.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
         {
             _logger.LogInformation("[JIT Function] GET request - Endpoint validation | RequestId: {RequestId}", requestId);
@@ -86,7 +86,7 @@ public class JitAuthenticationFunction
 
         try
         {
-            // Parse External ID Custom Authentication Extension request
+            // External ID カスタム認証拡張機能リクエストの解析
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             _logger.LogInformation(
                 "[JIT Function] Parsing External ID payload | RequestId: {RequestId} | BodyLength: {Length}",
@@ -110,12 +110,12 @@ public class JitAuthenticationFunction
                 });
             }
 
-            // Extract user information from External ID payload
+            // External ID ペイロードからユーザー情報を抽出
             var userId = extRequest.Data.AuthenticationContext?.User?.Id;
             var userPrincipalName = extRequest.Data.AuthenticationContext?.User?.UserPrincipalName;
             var correlationId = extRequest.Data.AuthenticationContext?.CorrelationId ?? requestId;
 
-            // Extract password - handle both encrypted and plain text contexts
+            // パスワードの抽出 - 暗号化されたコンテキストとプレーンテキストの両方を処理
             string? userPassword = null;
             string? nonce = null;
 
@@ -143,7 +143,7 @@ public class JitAuthenticationFunction
             }
             else
             {
-                // Fallback to plain text password context (for testing)
+                // プレーンテキストのパスワード コンテキストにフォールバック（テスト用）
                 userPassword = extRequest.Data.PasswordContext?.UserPassword;
                 nonce = extRequest.Data.PasswordContext?.Nonce;
             }
@@ -152,7 +152,7 @@ public class JitAuthenticationFunction
                 "[JIT Function] Parsed External ID payload | UserId: {UserId} | UPN: {UPN} | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                 userId, userPrincipalName, correlationId, requestId);
 
-            // Validate required fields
+            // 必須フィールドの検証
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userPassword))
             {
                 _logger.LogWarning(
@@ -167,7 +167,7 @@ public class JitAuthenticationFunction
                 }, nonce);
             }
 
-            // For B2C validation, we need the UPN - if not provided, try to construct it
+            // B2C 検証には UPN が必要 - 提供されていない場合は構築を試行
             if (string.IsNullOrEmpty(userPrincipalName))
             {
                 _logger.LogWarning(
@@ -182,15 +182,15 @@ public class JitAuthenticationFunction
                 }, nonce);
             }
 
-            // Transform External ID UPN to B2C UPN (reverse transformation)
-            // Example: user@externalid.onmicrosoft.com → user@b2c.onmicrosoft.com
+            // External ID UPN を B2C UPN に変換（逆変換）
+            // 例: user@externalid.onmicrosoft.com → user@b2c.onmicrosoft.com
             var b2cUpn = TransformUpnForB2C(userPrincipalName);
 
             _logger.LogInformation(
                 "[JIT Function] Transformed UPN for B2C validation | ExternalIdUPN: {ExternalIdUPN} | B2CUPN: {B2CUPN} | RequestId: {RequestId}",
                 userPrincipalName, b2cUpn, requestId);
 
-            // Perform JIT migration to B2C or whatever 3rp party IDP
+            // B2C または他のサードパーティ IDP への JIT 移行を実行
             _logger.LogInformation(
                 "[JIT Function] Calling JIT migration service | UserId: {UserId} | B2C UPN: {UPN} | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                 userId, b2cUpn, correlationId, requestId);
@@ -243,7 +243,7 @@ public class JitAuthenticationFunction
     }
 
     /// <summary>
-    /// Creates Custom Authentication Extension response.
+    /// カスタム認証拡張機能レスポンスを作成します。
     /// </summary>
     private static async Task<HttpResponseData> CreateExtensionResponseAsync(
         HttpRequestData req,
@@ -258,7 +258,7 @@ public class JitAuthenticationFunction
             result.Title,
             result.Message);
 
-        // Add nonce to response if provided
+        // 提供された場合、レスポンスに nonce を追加
         if (!string.IsNullOrEmpty(nonce))
         {
             extResponse.Data.Nonce = nonce;
@@ -276,14 +276,14 @@ public class JitAuthenticationFunction
     }
 
     /// <summary>
-    /// Decrypts the encrypted password context from External ID using RSA private key.
-    /// The encrypted context is a JWT token encrypted with the public key configured in External ID.
-    /// Private key is retrieved from Azure Key Vault or inline configuration.
+    /// RSA 秘密キーを使用して External ID からの暗号化されたパスワード コンテキストを復号化します。
+    /// 暗号化されたコンテキストは、External ID で構成された公開キーで暗号化された JWT トークンです。
+    /// 秘密キーは Azure Key Vault またはインライン構成から取得されます。
     /// </summary>
-    /// <param name="encryptedContext">The encrypted JWT token from External ID</param>
-    /// <param name="correlationId">Correlation ID for logging</param>
-    /// <param name="requestId">Request ID for logging</param>
-    /// <returns>Tuple containing (password, nonce)</returns>
+    /// <param name="encryptedContext">External ID からの暗号化された JWT トークン</param>
+    /// <param name="correlationId">ログ用の相関 ID</param>
+    /// <param name="requestId">ログ用のリクエスト ID</param>
+    /// <returns>（パスワード、nonce）を含むタプル</returns>
     private async Task<(string? password, string? nonce)> DecryptPasswordContext(
         string encryptedContext,
         string correlationId,
@@ -303,7 +303,7 @@ public class JitAuthenticationFunction
                 return (null, null);
             }
 
-            // Get RSA private key (from cache, Key Vault, or inline config)
+            // RSA 秘密キーを取得（キャッシュ、Key Vault、またはインライン構成から）
             var privateKeyPem = await GetPrivateKeyAsync(correlationId, requestId);
 
             if (string.IsNullOrEmpty(privateKeyPem))
@@ -314,7 +314,7 @@ public class JitAuthenticationFunction
                 return (null, null);
             }
 
-            // Create RSA instance and import private key
+            // RSA インスタンスを作成し、秘密キーをインポート
             using var rsa = RSA.Create();
             rsa.ImportFromPem(privateKeyPem);
 
@@ -322,7 +322,7 @@ public class JitAuthenticationFunction
                 "[JIT Function] RSA key imported, attempting JWT decryption | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                 correlationId, requestId);
 
-            // Step 1: Decrypt JWE using RSA private key
+            // ステップ 1: RSA 秘密キーを使用して JWE を復号化
             string decryptedPayload = JWT.Decode(encryptedContext, rsa);
 
             if (string.IsNullOrEmpty(decryptedPayload))
@@ -337,7 +337,7 @@ public class JitAuthenticationFunction
                 "[JIT Function] JWT decrypted successfully (payload length: {Length}), decoding inner JWT | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                 decryptedPayload.Length, correlationId, requestId);
 
-            // Step 2: Decode the inner JWS (no encryption, just base64)
+            // ステップ 2: 内部 JWS をデコード（暗号化なし、base64 のみ）
             string jsonPayload = JWT.Decode(decryptedPayload, null, JwsAlgorithm.none);
 
             if (string.IsNullOrEmpty(jsonPayload))
@@ -352,11 +352,11 @@ public class JitAuthenticationFunction
                 "[JIT Function] Inner JWT decoded successfully, parsing JSON | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                 correlationId, requestId);
 
-            // Parse the final JSON payload
+            // 最終的な JSON ペイロードを解析
             var payloadDoc = JsonDocument.Parse(jsonPayload);
             var root = payloadDoc.RootElement;
 
-            // Extract password and nonce from payload
+            // ペイロードからパスワードと nonce を抽出
             string? password = root.TryGetProperty("user-password", out var pwdElement) 
                 ? pwdElement.GetString() 
                 : null;
@@ -404,12 +404,12 @@ public class JitAuthenticationFunction
     }
 
     /// <summary>
-    /// Gets the RSA private key from cache, Key Vault, or inline configuration.
-    /// Implements caching to reduce Key Vault calls.
+    /// キャッシュ、Key Vault、またはインライン構成から RSA 秘密キーを取得します。
+    /// Key Vault 呼び出しを削減するためにキャッシュを実装しています。
     /// </summary>
     private async Task<string?> GetPrivateKeyAsync(string correlationId, string requestId)
     {
-        // Return cached key if available and caching is enabled
+        // キャッシュが有効で利用可能な場合、キャッシュされたキーを返す
         if (_jitOptions.CachePrivateKey && _cachedPrivateKey != null)
         {
             _logger.LogDebug(
@@ -418,11 +418,11 @@ public class JitAuthenticationFunction
             return _cachedPrivateKey;
         }
 
-        // Use semaphore to prevent concurrent Key Vault calls during first load
+        // 最初の読み込み時に同時 Key Vault 呼び出しを防ぐためにセマフォを使用
         await _keyLoadLock.WaitAsync();
         try
         {
-            // Double-check after acquiring lock
+            // ロック取得後に再確認
             if (_jitOptions.CachePrivateKey && _cachedPrivateKey != null)
             {
                 return _cachedPrivateKey;
@@ -432,7 +432,7 @@ public class JitAuthenticationFunction
 
             if (_jitOptions.UseKeyVault)
             {
-                // Retrieve from Azure Key Vault
+                // Azure Key Vault から取得
                 _logger.LogInformation(
                     "[JIT Function] Retrieving RSA private key from Key Vault: {KeyName} | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                     _jitOptions.RsaKeyName, correlationId, requestId);
@@ -453,7 +453,7 @@ public class JitAuthenticationFunction
             }
             else
             {
-                // Use inline key from configuration (local development only)
+                // 構成からインライン キーを使用（ローカル開発専用）
                 _logger.LogWarning(
                     "[JIT Function] Using inline RSA private key from configuration (local development mode) | CorrelationId: {CorrelationId} | RequestId: {RequestId}",
                     correlationId, requestId);
@@ -461,7 +461,7 @@ public class JitAuthenticationFunction
                 privateKey = _jitOptions.InlineRsaPrivateKey;
             }
 
-            // Cache the key if caching is enabled
+            // キャッシュが有効な場合、キーをキャッシュ
             if (_jitOptions.CachePrivateKey && !string.IsNullOrEmpty(privateKey))
             {
                 _cachedPrivateKey = privateKey;
@@ -479,14 +479,14 @@ public class JitAuthenticationFunction
     }
 
     /// <summary>
-    /// Transform External ID UPN to B2C UPN by replacing domain.
-    /// This is the inverse transformation of ImportOrchestrator.TransformUpnForExternalId.
-    /// Examples:
+    /// ドメインを置き換えて External ID UPN を B2C UPN に変換します。
+    /// これは ImportOrchestrator.TransformUpnForExternalId の逆変換です。
+    /// 例:
     ///   user@externalid.onmicrosoft.com → user@b2c.onmicrosoft.com
     ///   047102b7-221a-4fcf-9bf6-a179e37efd62@externalid.onmicrosoft.com → 047102b7-221a-4fcf-9bf6-a179e37efd62@b2c.onmicrosoft.com
     /// </summary>
-    /// <param name="externalIdUpn">UPN from External ID (with External ID domain)</param>
-    /// <returns>UPN with B2C domain for ROPC validation</returns>
+    /// <param name="externalIdUpn">External ID からの UPN（External ID ドメイン付き）</param>
+    /// <returns>ROPC 検証用の B2C ドメイン付き UPN</returns>
     private string TransformUpnForB2C(string externalIdUpn)
     {
         if (string.IsNullOrEmpty(externalIdUpn))
@@ -494,12 +494,12 @@ public class JitAuthenticationFunction
 
         var atIndex = externalIdUpn.IndexOf('@');
         if (atIndex == -1)
-            return externalIdUpn; // Invalid format, return as-is
+            return externalIdUpn; // 無効な形式、そのまま返す
 
-        // Extract local part (everything before @)
+        // ローカル部分を抽出（@ より前のすべて）
         var localPart = externalIdUpn.Substring(0, atIndex);
 
-        // Replace External ID domain with B2C domain
+        // External ID ドメインを B2C ドメインに置き換え
         var b2cUpn = $"{localPart}@{_migrationOptions.B2C.TenantDomain}";
 
         _logger.LogDebug(

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace B2CMigrationKit.Console;
 
 /// <summary>
-/// Console application for running B2C migration operations locally.
+/// B2C 移行操作をローカルで実行するためのコンソール アプリケーション。
 /// </summary>
 class Program
 {
@@ -20,7 +20,7 @@ class Program
     {
         try
         {
-            // Parse command line arguments
+            // コマンドライン引数を解析
             var operation = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
             var configPath = GetArgument(args, "--config") ?? "appsettings.json";
             var verbose = HasArgument(args, "--verbose");
@@ -35,10 +35,10 @@ class Program
             System.Console.WriteLine("===================================");
             System.Console.WriteLine();
 
-            // Build host
+            // ホストをビルド
             var host = CreateHostBuilder(args, configPath, verbose).Build();
 
-            // Execute operation
+            // 操作を実行
             var exitCode = operation switch
             {
                 "export" => await RunExportAsync(host),
@@ -72,13 +72,13 @@ class Program
             })
             .ConfigureServices((context, services) =>
             {
-                // Register core services
+                // コア サービスを登録
                 services.AddMigrationKitCore(context.Configuration);
             })
             .ConfigureLogging((context, logging) =>
             {
                 logging.ClearProviders();
-                logging.AddConsole(options =>
+                logging.AddSimpleConsole(options =>
                 {
                     options.TimestampFormat = "HH:mm:ss ";
                 });

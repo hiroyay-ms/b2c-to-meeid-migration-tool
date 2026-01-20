@@ -5,82 +5,82 @@ using System.ComponentModel.DataAnnotations;
 namespace B2CMigrationKit.Core.Configuration;
 
 /// <summary>
-/// Main configuration options for the B2C migration toolkit.
+/// B2C 移行ツールキットのメイン構成オプション。
 /// </summary>
 public class MigrationOptions
 {
     /// <summary>
-    /// Configuration section name.
+    /// 構成セクション名。
     /// </summary>
     public const string SectionName = "Migration";
 
     /// <summary>
-    /// Gets or sets the Azure AD B2C configuration.
+    /// Azure AD B2C の構成を取得または設定します。
     /// </summary>
     [Required]
     public B2COptions B2C { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the Entra External ID configuration.
+    /// Entra External ID の構成を取得または設定します。
     /// </summary>
     [Required]
     public ExternalIdOptions ExternalId { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the Azure Storage configuration.
+    /// Azure Storage の構成を取得または設定します。
     /// </summary>
     [Required]
     public StorageOptions Storage { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the Azure Key Vault configuration.
+    /// Azure Key Vault の構成を取得または設定します。
     /// </summary>
     public KeyVaultOptions? KeyVault { get; set; }
 
     /// <summary>
-    /// Gets or sets the telemetry configuration.
+    /// テレメトリの構成を取得または設定します。
     /// </summary>
     public TelemetryOptions Telemetry { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the retry policy configuration.
+    /// リトライ ポリシーの構成を取得または設定します。
     /// </summary>
     public RetryOptions Retry { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the export configuration.
+    /// エクスポートの構成を取得または設定します。
     /// </summary>
     public ExportOptions Export { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the import configuration.
+    /// インポートの構成を取得または設定します。
     /// </summary>
     public ImportOptions Import { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the JIT authentication configuration.
+    /// JIT 認証の構成を取得または設定します。
     /// </summary>
     public JitAuthenticationOptions JitAuthentication { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the batch size for operations (default: 100).
+    /// 操作のバッチ サイズを取得または設定します（既定値: 100）。
     /// </summary>
     [Range(1, 1000)]
     public int BatchSize { get; set; } = 100;
 
     /// <summary>
-    /// Gets or sets the page size for Graph API queries (default: 100).
+    /// Graph API クエリのページ サイズを取得または設定します（既定値: 100）。
     /// </summary>
     [Range(1, 999)]
     public int PageSize { get; set; } = 100;
 
     /// <summary>
-    /// Gets or sets whether to enable verbose logging (default: false).
+    /// 詳細ログを有効にするかどうかを取得または設定します（既定値: false）。
     /// </summary>
     public bool VerboseLogging { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets the delay between batches in milliseconds (default: 0).
+    /// バッチ間の遅延（ミリ秒）を取得または設定します（既定値: 0）。
     /// </summary>
     [Range(0, 10000)]
     public int BatchDelayMs { get; set; } = 0;

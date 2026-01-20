@@ -17,7 +17,7 @@ var host = new HostBuilder()
     {
         services.AddApplicationInsightsTelemetryWorkerService();
 
-        // Register migration kit core services
+        // 移行キット コア サービスを登録
         services.AddMigrationKitCore(context.Configuration);
     })
     .Build();

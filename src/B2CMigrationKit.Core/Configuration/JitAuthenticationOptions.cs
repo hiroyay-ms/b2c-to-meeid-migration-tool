@@ -3,59 +3,59 @@
 namespace B2CMigrationKit.Core.Configuration;
 
 /// <summary>
-/// Configuration options for JIT (Just-In-Time) authentication during migration.
+/// 移行中の JIT（Just-In-Time）認証の構成オプション。
 /// </summary>
 public class JitAuthenticationOptions
 {
     /// <summary>
-    /// Gets or sets the name of the RSA private key in Azure Key Vault.
-    /// This key is used to decrypt the password context sent by External ID.
-    /// Default: "JIT-RSA-PrivateKey"
+    /// Azure Key Vault 内の RSA 秘密キー名を取得または設定します。
+    /// このキーは External ID から送信されるパスワード コンテキストの復号化に使用されます。
+    /// 既定値: "JIT-RSA-PrivateKey"
     /// </summary>
     public string RsaKeyName { get; set; } = "JIT-RSA-PrivateKey";
 
     /// <summary>
-    /// Gets or sets whether to use Azure Key Vault for RSA private key storage.
-    /// When true, the key is retrieved from Key Vault using Managed Identity.
-    /// When false, falls back to inline key in configuration (local development only).
-    /// Default: true (production should always use Key Vault)
+    /// RSA 秘密キーの保存に Azure Key Vault を使用するかどうかを取得または設定します。
+    /// true の場合、マネージド ID を使用して Key Vault からキーを取得します。
+    /// false の場合、構成内のインライン キーにフォールバックします（ローカル開発専用）。
+    /// 既定値: true（本番環境では常に Key Vault を使用する必要があります）
     /// </summary>
     public bool UseKeyVault { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the inline RSA private key in PEM format for local development.
-    /// WARNING: Only use this for local development. Never commit actual keys to source control.
-    /// Production deployments must use Azure Key Vault (UseKeyVault = true).
+    /// ローカル開発用の PEM 形式のインライン RSA 秘密キーを取得または設定します。
+    /// 警告: ローカル開発にのみ使用してください。実際のキーをソース管理にコミットしないでください。
+    /// 本番デプロイでは Azure Key Vault を使用する必要があります（UseKeyVault = true）。
     /// </summary>
     public string? InlineRsaPrivateKey { get; set; }
 
     /// <summary>
-    /// Gets or sets the timeout in seconds for JIT authentication operations.
-    /// External ID has a 2-second timeout, so this should be less than that.
-    /// Default: 1.5 seconds
+    /// JIT 認証操作のタイムアウト（秒）を取得または設定します。
+    /// External ID には 2 秒のタイムアウトがあるため、これはそれ未満である必要があります。
+    /// 既定値: 1.5 秒
     /// </summary>
     public double TimeoutSeconds { get; set; } = 1.5;
 
     /// <summary>
-    /// Gets or sets whether to cache the RSA private key in memory after first retrieval.
-    /// Reduces Key Vault calls but keeps key in memory.
-    /// Default: true
+    /// 最初の取得後に RSA 秘密キーをメモリにキャッシュするかどうかを取得または設定します。
+    /// Key Vault 呼び出しを削減しますが、キーをメモリに保持します。
+    /// 既定値: true
     /// </summary>
     public bool CachePrivateKey { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets whether to enable Test Mode for JIT migration.
-    /// When true, skips B2C ROPC validation and password complexity checks.
-    /// WARNING: Only use for local development and testing. Must be false in production.
-    /// Default: false (production mode)
+    /// JIT 移行のテスト モードを有効にするかどうかを取得または設定します。
+    /// true の場合、B2C ROPC 検証とパスワード複雑性チェックをスキップします。
+    /// 警告: ローカル開発とテストにのみ使用してください。本番環境では false である必要があります。
+    /// 既定値: false（本番モード）
     /// </summary>
     public bool TestMode { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets the name of the custom attribute used to trigger JIT migration.
-    /// This attribute must be configured in External ID Custom Authentication Extension.
-    /// When this attribute is true AND password doesn't match, JIT is triggered.
-    /// Default: "RequiresMigration"
+    /// JIT 移行をトリガーするために使用されるカスタム属性名を取得または設定します。
+    /// この属性は External ID カスタム認証拡張機能で構成する必要があります。
+    /// この属性が true かつパスワードが一致しない場合、JIT がトリガーされます。
+    /// 既定値: "RequiresMigration"
     /// </summary>
     public string MigrationAttributeName { get; set; } = "RequiresMigration";
 }
