@@ -1,3 +1,5 @@
+**[日本語](ARCHITECTURE_GUIDE_jp.md)** | English
+
 # B2C Migration Kit - Architecture Guide
 
 **Target Audience**: Solutions Architects, Technical Leads, Security Reviewers, Decision Makers

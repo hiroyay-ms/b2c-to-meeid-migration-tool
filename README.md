@@ -1,3 +1,5 @@
+**[日本語](README_jp.md)** | English
+
 # Azure AD B2C to Entra External ID Migration Kit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

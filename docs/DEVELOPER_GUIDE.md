@@ -1,3 +1,5 @@
+**[日本語](DEVELOPER_GUIDE_jp.md)** | English
+
 # B2C Migration Kit - Developer Guide
 
 This comprehensive guide provides detailed information for developers implementing, customizing, and operating the B2C to External ID Migration Kit.
