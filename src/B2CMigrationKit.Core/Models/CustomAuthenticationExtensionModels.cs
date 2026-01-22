@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Request payload from External ID Custom Authentication Extension (OnPasswordSubmit event).
+/// External ID カスタム認証拡張機能（OnPasswordSubmit イベント）からのリクエストペイロード。
 /// </summary>
 public class CustomAuthenticationExtensionRequest
 {
@@ -125,7 +125,7 @@ public class PasswordContext
 }
 
 /// <summary>
-/// Response to return to External ID Custom Authentication Extension.
+/// External ID カスタム認証拡張機能に返すレスポンス。
 /// </summary>
 public class CustomAuthenticationExtensionResponse
 {
@@ -186,29 +186,29 @@ public class ResponseAction
 }
 
 /// <summary>
-/// Available action types for Custom Authentication Extension response.
+/// カスタム認証拡張機能レスポンスで使用可能なアクションタイプ。
 /// </summary>
 public enum ResponseActionType
 {
     /// <summary>
-    /// Migrate the user's password from the source system.
-    /// External ID will set the password to the value provided by the user.
+    /// ソースシステムからユーザーのパスワードを移行します。
+    /// External ID はユーザーが提供した値にパスワードを設定します。
     /// </summary>
     MigratePassword,
 
     /// <summary>
-    /// Block the user from signing in.
-    /// Requires title and message to display to the user.
+    /// ユーザーのサインインをブロックします。
+    /// ユーザーに表示するタイトルとメッセージが必要です。
     /// </summary>
     Block,
 
     /// <summary>
-    /// Update the user's password.
+    /// ユーザーのパスワードを更新します。
     /// </summary>
     UpdatePassword,
 
     /// <summary>
-    /// Ask the user to retry authentication.
+    /// ユーザーに認証の再試行を求めます。
     /// </summary>
     Retry
 }

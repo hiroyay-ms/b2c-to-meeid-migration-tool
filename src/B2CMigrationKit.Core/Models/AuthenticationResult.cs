@@ -3,47 +3,47 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents the result of a credential validation attempt.
+/// 資格情報の検証結果を表します。
 /// </summary>
 public class AuthenticationResult
 {
     /// <summary>
-    /// Gets or sets whether authentication was successful.
+    /// 認証が成功したかどうかを取得または設定します。
     /// </summary>
     public bool Success { get; set; }
 
     /// <summary>
-    /// Gets or sets the error code if authentication failed.
+    /// 認証が失敗した場合のエラーコードを取得または設定します。
     /// </summary>
     public string? ErrorCode { get; set; }
 
     /// <summary>
-    /// Gets or sets the error description if authentication failed.
+    /// 認証が失敗した場合のエラー説明を取得または設定します。
     /// </summary>
     public string? ErrorDescription { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's object ID if authentication was successful.
+    /// 認証が成功した場合のユーザーのオブジェクトIDを取得または設定します。
     /// </summary>
     public string? UserId { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the account is locked out.
+    /// アカウントがロックアウトされているかどうかを取得または設定します。
     /// </summary>
     public bool IsLockedOut { get; set; }
 
     /// <summary>
-    /// Gets or sets whether MFA is required.
+    /// MFAが必要かどうかを取得または設定します。
     /// </summary>
     public bool RequiresMfa { get; set; }
 
     /// <summary>
-    /// Gets or sets additional context from the authentication attempt.
+    /// 認証試行からの追加コンテキストを取得または設定します。
     /// </summary>
     public Dictionary<string, string> Context { get; set; } = new();
 
     /// <summary>
-    /// Creates a successful authentication result.
+    /// 成功した認証結果を作成します。
     /// </summary>
     public static AuthenticationResult CreateSuccess(string userId)
     {
@@ -55,7 +55,7 @@ public class AuthenticationResult
     }
 
     /// <summary>
-    /// Creates a failed authentication result.
+    /// 失敗した認証結果を作成します。
     /// </summary>
     public static AuthenticationResult CreateFailure(string errorCode, string errorDescription)
     {

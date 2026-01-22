@@ -3,155 +3,155 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Audit log for an import batch operation.
+/// インポートバッチ操作の監査ログ。
 /// </summary>
 public class ImportAuditLog
 {
     /// <summary>
-    /// Gets or sets the timestamp when this batch was processed.
+    /// このバッチが処理されたタイムスタンプを取得または設定します。
     /// </summary>
     public DateTimeOffset Timestamp { get; set; }
 
     /// <summary>
-    /// Gets or sets the source blob file name that was imported.
+    /// インポートされたソースBlobファイル名を取得または設定します。
     /// </summary>
     public string SourceBlobName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the batch number being processed.
+    /// 処理中のバッチ番号を取得または設定します。
     /// </summary>
     public int BatchNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets the total number of users in this batch.
+    /// このバッチ内のユーザーの総数を取得または設定します。
     /// </summary>
     public int TotalUsers { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of successfully imported users.
+    /// 正常にインポートされたユーザーの数を取得または設定します。
     /// </summary>
     public int SuccessCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of failed imports.
+    /// インポートに失敗した数を取得または設定します。
     /// </summary>
     public int FailureCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of skipped users (duplicates that already exist).
+    /// スキップされたユーザーの数（既に存在する重複）を取得または設定します。
     /// </summary>
     public int SkippedCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the list of successfully imported users.
+    /// 正常にインポートされたユーザーのリストを取得または設定します。
     /// </summary>
     public List<ImportedUserRecord> SuccessfulUsers { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the list of skipped users (duplicates).
+    /// スキップされたユーザー（重複）のリストを取得または設定します。
     /// </summary>
     public List<SkippedUserRecord> SkippedUsers { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the list of failed user imports with error details.
+    /// エラー詳細を含む失敗したユーザーインポートのリストを取得または設定します。
     /// </summary>
     public List<FailedUserRecord> FailedUsers { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the duration of this batch operation in milliseconds.
+    /// このバッチ操作の所要時間（ミリ秒）を取得または設定します。
     /// </summary>
     public double DurationMs { get; set; }
 }
 
 /// <summary>
-/// Record of a successfully imported user.
+/// 正常にインポートされたユーザーのレコード。
 /// </summary>
 public class ImportedUserRecord
 {
     /// <summary>
-    /// Gets or sets the original B2C ObjectId.
+    /// 元のB2C ObjectIdを取得または設定します。
     /// </summary>
     public string B2CObjectId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the new External ID ObjectId.
+    /// 新しいExternal ID ObjectIdを取得または設定します。
     /// </summary>
     public string ExternalIdObjectId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the user principal name.
+    /// ユーザープリンシパル名を取得または設定します。
     /// </summary>
     public string UserPrincipalName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the user's display name.
+    /// ユーザーの表示名を取得または設定します。
     /// </summary>
     public string DisplayName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the timestamp when this user was imported.
+    /// このユーザーがインポートされたタイムスタンプを取得または設定します。
     /// </summary>
     public DateTimeOffset ImportedAt { get; set; }
 }
 
 /// <summary>
-/// Record of a skipped user (duplicate).
+/// スキップされたユーザー（重複）のレコード。
 /// </summary>
 public class SkippedUserRecord
 {
     /// <summary>
-    /// Gets or sets the original B2C ObjectId.
+    /// 元のB2C ObjectIdを取得または設定します。
     /// </summary>
     public string B2CObjectId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the user principal name.
+    /// ユーザープリンシパル名を取得または設定します。
     /// </summary>
     public string UserPrincipalName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the user's display name.
+    /// ユーザーの表示名を取得または設定します。
     /// </summary>
     public string DisplayName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the reason for skipping.
+    /// スキップの理由を取得または設定します。
     /// </summary>
     public string Reason { get; set; } = "Duplicate - User already exists";
 
     /// <summary>
-    /// Gets or sets the timestamp when this user was skipped.
+    /// このユーザーがスキップされたタイムスタンプを取得または設定します。
     /// </summary>
     public DateTimeOffset SkippedAt { get; set; }
 }
 
 /// <summary>
-/// Record of a failed user import.
+/// 失敗したユーザーインポートのレコード。
 /// </summary>
 public class FailedUserRecord
 {
     /// <summary>
-    /// Gets or sets the original B2C ObjectId.
+    /// 元のB2C ObjectIdを取得または設定します。
     /// </summary>
     public string B2CObjectId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the user principal name.
+    /// ユーザープリンシパル名を取得または設定します。
     /// </summary>
     public string UserPrincipalName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the error message.
+    /// エラーメッセージを取得または設定します。
     /// </summary>
     public string ErrorMessage { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the error code (if available).
+    /// エラーコード（利用可能な場合）を取得または設定します。
     /// </summary>
     public string? ErrorCode { get; set; }
 
     /// <summary>
-    /// Gets or sets the timestamp when this failure occurred.
+    /// この失敗が発生したタイムスタンプを取得または設定します。
     /// </summary>
     public DateTimeOffset FailedAt { get; set; }
 }

@@ -3,83 +3,83 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents the result of a batch operation on multiple users.
+/// 複数ユーザーに対するバッチ操作の結果を表します。
 /// </summary>
 public class BatchResult
 {
     /// <summary>
-    /// Gets or sets the total number of items in the batch.
+    /// バッチ内のアイテムの総数を取得または設定します。
     /// </summary>
     public int TotalItems { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of successful operations.
+    /// 成功した操作の数を取得または設定します。
     /// </summary>
     public int SuccessCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of failed operations.
+    /// 失敗した操作の数を取得または設定します。
     /// </summary>
     public int FailureCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of skipped operations (e.g., duplicates).
+    /// スキップされた操作の数（例：重複）を取得または設定します。
     /// </summary>
     public int SkippedCount { get; set; }
 
     /// <summary>
-    /// Gets or sets details about failed items.
+    /// 失敗したアイテムの詳細を取得または設定します。
     /// </summary>
     public List<BatchItemFailure> Failures { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the list of skipped user identifiers (duplicates).
+    /// スキップされたユーザー識別子（重複）のリストを取得または設定します。
     /// </summary>
     public List<string> SkippedUserIds { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the list of duplicate users for potential extension attribute updates.
+    /// 拡張属性の更新対象となる重複ユーザーのリストを取得または設定します。
     /// </summary>
     public List<UserProfile> DuplicateUsers { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets whether the batch was throttled.
+    /// バッチがスロットリングされたかどうかを取得または設定します。
     /// </summary>
     public bool WasThrottled { get; set; }
 
     /// <summary>
-    /// Gets or sets the retry after duration if throttled.
+    /// スロットリングされた場合のリトライ待機時間を取得または設定します。
     /// </summary>
     public TimeSpan? RetryAfter { get; set; }
 
     /// <summary>
-    /// Gets whether the entire batch was successful.
+    /// バッチ全体が成功したかどうかを取得します。
     /// </summary>
     public bool IsFullySuccessful => FailureCount == 0;
 }
 
 /// <summary>
-/// Represents a failure for a single item in a batch operation.
+/// バッチ操作における単一アイテムの失敗を表します。
 /// </summary>
 public class BatchItemFailure
 {
     /// <summary>
-    /// Gets or sets the index of the item in the batch.
+    /// バッチ内のアイテムのインデックスを取得または設定します。
     /// </summary>
     public int Index { get; set; }
 
     /// <summary>
-    /// Gets or sets the identifier of the item (e.g., user ID or UPN).
+    /// アイテムの識別子（例：ユーザーIDまたはUPN）を取得または設定します。
     /// </summary>
     public string? ItemId { get; set; }
 
     /// <summary>
-    /// Gets or sets the error message.
+    /// エラーメッセージを取得または設定します。
     /// </summary>
     public string? ErrorMessage { get; set; }
 
     /// <summary>
-    /// Gets or sets the HTTP status code if applicable.
+    /// 該当する場合のHTTPステータスコードを取得または設定します。
     /// </summary>
     public int? StatusCode { get; set; }
 }

@@ -12,7 +12,7 @@ using System.Text;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Provides access to Azure Blob Storage for migration data.
+/// 移行データ用の Azure Blob Storage へのアクセスを提供します。
 /// </summary>
 public class BlobStorageClient : IBlobStorageClient
 {

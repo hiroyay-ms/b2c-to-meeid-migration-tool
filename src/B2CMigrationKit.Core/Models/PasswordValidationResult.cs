@@ -3,47 +3,47 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents the result of password complexity validation.
+/// パスワード複雑性検証の結果を表します。
 /// </summary>
 public class PasswordValidationResult
 {
     /// <summary>
-    /// Gets or sets whether the password is valid.
+    /// パスワードが有効かどうかを取得または設定します。
     /// </summary>
     public bool IsValid { get; set; }
 
     /// <summary>
-    /// Gets or sets validation error messages.
+    /// 検証エラーメッセージを取得または設定します。
     /// </summary>
     public List<string> Errors { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets whether the password meets minimum length requirements.
+    /// パスワードが最小長要件を満たしているかどうかを取得または設定します。
     /// </summary>
     public bool MeetsLengthRequirement { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the password contains uppercase characters.
+    /// パスワードに大文字が含まれているかどうかを取得または設定します。
     /// </summary>
     public bool HasUppercase { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the password contains lowercase characters.
+    /// パスワードに小文字が含まれているかどうかを取得または設定します。
     /// </summary>
     public bool HasLowercase { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the password contains digits.
+    /// パスワードに数字が含まれているかどうかを取得または設定します。
     /// </summary>
     public bool HasDigit { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the password contains special characters.
+    /// パスワードに特殊文字が含まれているかどうかを取得または設定します。
     /// </summary>
     public bool HasSpecialCharacter { get; set; }
 
     /// <summary>
-    /// Creates a successful validation result.
+    /// 成功した検証結果を作成します。
     /// </summary>
     public static PasswordValidationResult CreateValid()
     {
@@ -59,7 +59,7 @@ public class PasswordValidationResult
     }
 
     /// <summary>
-    /// Creates a failed validation result.
+    /// 失敗した検証結果を作成します。
     /// </summary>
     public static PasswordValidationResult CreateInvalid(params string[] errors)
     {

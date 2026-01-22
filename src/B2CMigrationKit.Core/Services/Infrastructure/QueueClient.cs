@@ -13,7 +13,7 @@ using System.Text.Json;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Provides access to Azure Queue Storage for async profile sync.
+/// 非同期プロファイル同期用の Azure Queue Storage へのアクセスを提供します。
 /// </summary>
 public class QueueClient : IQueueClient
 {

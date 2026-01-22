@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Factory for creating Microsoft Graph clients with credential rotation support.
+/// 資格情報ローテーションをサポートする Microsoft Graph クライアントを作成するファクトリ。
 /// </summary>
 public class GraphClientFactory
 {

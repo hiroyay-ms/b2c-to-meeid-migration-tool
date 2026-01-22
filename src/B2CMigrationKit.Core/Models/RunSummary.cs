@@ -3,62 +3,62 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents a summary of an execution run with metrics and counts.
+/// メトリクスとカウントを含む実行サマリーを表します。
 /// </summary>
 public class RunSummary
 {
     /// <summary>
-    /// Gets or sets the name of the operation.
+    /// 操作の名前を取得または設定します。
     /// </summary>
     public string? OperationName { get; set; }
 
     /// <summary>
-    /// Gets or sets the start time of the run.
+    /// 実行の開始時刻を取得または設定します。
     /// </summary>
     public DateTimeOffset StartTime { get; set; }
 
     /// <summary>
-    /// Gets or sets the end time of the run.
+    /// 実行の終了時刻を取得または設定します。
     /// </summary>
     public DateTimeOffset EndTime { get; set; }
 
     /// <summary>
-    /// Gets the duration of the run.
+    /// 実行の所要時間を取得します。
     /// </summary>
     public TimeSpan Duration => EndTime - StartTime;
 
     /// <summary>
-    /// Gets or sets the total number of items processed.
+    /// 処理されたアイテムの総数を取得または設定します。
     /// </summary>
     public int TotalItems { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of successful items.
+    /// 成功したアイテムの数を取得または設定します。
     /// </summary>
     public int SuccessCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of failed items.
+    /// 失敗したアイテムの数を取得または設定します。
     /// </summary>
     public int FailureCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of skipped items.
+    /// スキップされたアイテムの数を取得または設定します。
     /// </summary>
     public int SkippedCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of times throttling was encountered.
+    /// スロットリングが発生した回数を取得または設定します。
     /// </summary>
     public int ThrottleCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the total number of retries performed.
+    /// 実行されたリトライの総数を取得または設定します。
     /// </summary>
     public int RetryCount { get; set; }
 
     /// <summary>
-    /// Gets or sets the throughput in items per second.
+    /// 1秒あたりのアイテム数（スループット）を取得または設定します。
     /// </summary>
     public double ItemsPerSecond
     {
@@ -70,17 +70,17 @@ public class RunSummary
     }
 
     /// <summary>
-    /// Gets or sets custom metrics for the run.
+    /// 実行のカスタムメトリクスを取得または設定します。
     /// </summary>
     public Dictionary<string, double> Metrics { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets additional context and metadata.
+    /// 追加のコンテキストとメタデータを取得または設定します。
     /// </summary>
     public Dictionary<string, string> Context { get; set; } = new();
 
     /// <summary>
-    /// Returns a formatted summary string for logging.
+    /// ログ用にフォーマットされたサマリー文字列を返します。
     /// </summary>
     public override string ToString()
     {

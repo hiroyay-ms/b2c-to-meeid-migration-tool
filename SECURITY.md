@@ -1,3 +1,5 @@
+**[日本語](SECURITY_jp.md)** | English
+
 # Security Policy
 
 ## Reporting Security Issues

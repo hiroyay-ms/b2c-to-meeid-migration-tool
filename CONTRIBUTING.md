@@ -1,3 +1,5 @@
+**[日本語](CONTRIBUTING_jp.md)** | English
+
 # Contributing to B2C Migration Kit
 
 Thank you for your interest in contributing to the B2C Migration Kit! This project is a sample implementation for migrating users from Azure AD B2C to Microsoft Entra External ID.

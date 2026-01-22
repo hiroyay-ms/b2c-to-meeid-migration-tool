@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace B2CMigrationKit.Core.Services.Orchestrators;
 
 /// <summary>
-/// Orchestrates the bulk import of users from Blob Storage to Entra External ID.
+/// Blob Storage から Entra External ID へのユーザーの一括インポートをオーケストレーションします。
 /// </summary>
 public class ImportOrchestrator : IOrchestrator<ExecutionResult>
 {

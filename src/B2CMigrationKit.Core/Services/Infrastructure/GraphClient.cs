@@ -14,7 +14,7 @@ using CoreModels = B2CMigrationKit.Core.Models;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Microsoft Graph client with retry logic and throttling handling.
+/// リトライロジックとスロットリング処理を備えた Microsoft Graph クライアント。
 /// </summary>
 public class GraphClient : IGraphClient
 {

@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Provides access to secrets stored in Azure Key Vault with in-memory caching.
+/// インメモリ キャッシュを備えた Azure Key Vault に保存されたシークレットへのアクセスを提供します。
 /// </summary>
 public class SecretProvider : ISecretProvider
 {

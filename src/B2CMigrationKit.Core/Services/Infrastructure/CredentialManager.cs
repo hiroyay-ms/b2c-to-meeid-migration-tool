@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Manages Azure AD app registration credential for Graph API access.
+/// Graph API アクセス用の Azure AD アプリ登録資格情報を管理します。
 /// </summary>
 public class CredentialManager : ICredentialManager
 {

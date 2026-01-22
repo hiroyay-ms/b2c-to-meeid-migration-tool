@@ -3,73 +3,73 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents a profile update message for queue-based async sync.
+/// キューベースの非同期同期用のプロファイル更新メッセージを表します。
 /// </summary>
 public class ProfileUpdateMessage
 {
     /// <summary>
-    /// Gets or sets the unique message ID.
+    /// 一意のメッセージIDを取得または設定します。
     /// </summary>
     public string? MessageId { get; set; }
 
     /// <summary>
-    /// Gets or sets the pop receipt (used for message deletion).
+    /// ポップレシート（メッセージ削除に使用）を取得または設定します。
     /// </summary>
     public string? PopReceipt { get; set; }
 
     /// <summary>
-    /// Gets or sets the source system where the change originated.
+    /// 変更が発生したソースシステムを取得または設定します。
     /// </summary>
     public UpdateSource Source { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's ID in the source system.
+    /// ソースシステムにおけるユーザーのIDを取得または設定します。
     /// </summary>
     public string? UserId { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's ID in the target system (if known).
+    /// ターゲットシステムにおけるユーザーのID（既知の場合）を取得または設定します。
     /// </summary>
     public string? TargetUserId { get; set; }
 
     /// <summary>
-    /// Gets or sets the B2C object ID for correlation.
+    /// 関連付けのためのB2CオブジェクトIDを取得または設定します。
     /// </summary>
     public string? B2CObjectId { get; set; }
 
     /// <summary>
-    /// Gets or sets the user principal name.
+    /// ユーザープリンシパル名を取得または設定します。
     /// </summary>
     public string? UserPrincipalName { get; set; }
 
     /// <summary>
-    /// Gets or sets the properties that were updated.
+    /// 更新されたプロパティを取得または設定します。
     /// </summary>
     public Dictionary<string, object> UpdatedProperties { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the timestamp when the update occurred.
+    /// 更新が発生したタイムスタンプを取得または設定します。
     /// </summary>
     public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
-    /// Gets or sets the correlation ID for tracking.
+    /// 追跡用の相関IDを取得または設定します。
     /// </summary>
     public string? CorrelationId { get; set; }
 }
 
 /// <summary>
-/// Specifies the source system for a profile update.
+/// プロファイル更新のソースシステムを指定します。
 /// </summary>
 public enum UpdateSource
 {
     /// <summary>
-    /// Update originated from Azure AD B2C.
+    /// 更新はAzure AD B2Cから発生しました。
     /// </summary>
     B2C,
 
     /// <summary>
-    /// Update originated from Entra External ID.
+    /// 更新はEntra External IDから発生しました。
     /// </summary>
     ExternalId
 }

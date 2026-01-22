@@ -11,9 +11,9 @@ using System.Collections.Concurrent;
 namespace B2CMigrationKit.Core.Services.Observability;
 
 /// <summary>
-/// Provides hybrid telemetry and observability services.
-/// Supports both console logging (via ILogger) and Application Insights (via TelemetryClient).
-/// Configuration controls which outputs are enabled.
+/// ハイブリッドなテレメトリおよび可観測性サービスを提供します。
+/// コンソール ログ（ILogger 経由）と Application Insights（TelemetryClient 経由）の両方をサポートします。
+/// 構成により、有効にする出力を制御します。
 /// </summary>
 public class TelemetryService : ITelemetryService
 {

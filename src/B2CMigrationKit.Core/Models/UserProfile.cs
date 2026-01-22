@@ -3,140 +3,140 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents a user profile with all relevant identity attributes.
+/// すべての関連するID属性を持つユーザープロファイルを表します。
 /// </summary>
 public class UserProfile
 {
     /// <summary>
-    /// Gets or sets the user's object ID in Azure AD.
+    /// Azure ADにおけるユーザーのオブジェクトIDを取得または設定します。
     /// </summary>
     public string? Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the user principal name (UPN).
+    /// ユーザープリンシパル名（UPN）を取得または設定します。
     /// </summary>
     public string? UserPrincipalName { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's display name.
+    /// ユーザーの表示名を取得または設定します。
     /// </summary>
     public string? DisplayName { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's given name (first name).
+    /// ユーザーの名（ファーストネーム）を取得または設定します。
     /// </summary>
     public string? GivenName { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's surname (last name).
+    /// ユーザーの姓（ラストネーム）を取得または設定します。
     /// </summary>
     public string? Surname { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's primary email address.
+    /// ユーザーのプライマリメールアドレスを取得または設定します。
     /// </summary>
     public string? Mail { get; set; }
 
     /// <summary>
-    /// Gets or sets alternative email addresses.
+    /// 代替メールアドレスを取得または設定します。
     /// </summary>
     public List<string> OtherMails { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the user's mobile phone number.
+    /// ユーザーの携帯電話番号を取得または設定します。
     /// </summary>
     public string? MobilePhone { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's street address.
+    /// ユーザーの住所を取得または設定します。
     /// </summary>
     public string? StreetAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's city.
+    /// ユーザーの市区町村を取得または設定します。
     /// </summary>
     public string? City { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's state or province.
+    /// ユーザーの都道府県を取得または設定します。
     /// </summary>
     public string? State { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's postal code.
+    /// ユーザーの郵便番号を取得または設定します。
     /// </summary>
     public string? PostalCode { get; set; }
 
     /// <summary>
-    /// Gets or sets the user's country.
+    /// ユーザーの国を取得または設定します。
     /// </summary>
     public string? Country { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the account is enabled.
+    /// アカウントが有効かどうかを取得または設定します。
     /// </summary>
     public bool AccountEnabled { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the password profile (used during user creation).
+    /// パスワードプロファイル（ユーザー作成時に使用）を取得または設定します。
     /// </summary>
     public PasswordProfile? PasswordProfile { get; set; }
 
     /// <summary>
-    /// Gets or sets extension attributes (custom properties).
-    /// Key format: extension_{appId}_{attributeName}
+    /// 拡張属性（カスタムプロパティ）を取得または設定します。
+    /// キー形式: extension_{appId}_{attributeName}
     /// </summary>
     public Dictionary<string, object> ExtensionAttributes { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets identities for the user (email, username, etc.).
+    /// ユーザーのID情報（メール、ユーザー名など）を取得または設定します。
     /// </summary>
     public List<ObjectIdentity> Identities { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the creation timestamp.
+    /// 作成日時を取得または設定します。
     /// </summary>
     public DateTimeOffset? CreatedDateTime { get; set; }
 
     /// <summary>
-    /// Gets or sets additional properties not explicitly mapped.
+    /// 明示的にマッピングされていない追加プロパティを取得または設定します。
     /// </summary>
     public Dictionary<string, object> AdditionalData { get; set; } = new();
 }
 
 /// <summary>
-/// Represents a password profile for user creation.
+/// ユーザー作成用のパスワードプロファイルを表します。
 /// </summary>
 public class PasswordProfile
 {
     /// <summary>
-    /// Gets or sets the password.
+    /// パスワードを取得または設定します。
     /// </summary>
     public string? Password { get; set; }
 
     /// <summary>
-    /// Gets or sets whether to force password change on next sign-in.
+    /// 次回サインイン時にパスワード変更を強制するかどうかを取得または設定します。
     /// </summary>
     public bool ForceChangePasswordNextSignIn { get; set; } = true;
 }
 
 /// <summary>
-/// Represents an identity associated with a user (email, federated, etc.).
+/// ユーザーに関連付けられたID情報（メール、フェデレーションなど）を表します。
 /// </summary>
 public class ObjectIdentity
 {
     /// <summary>
-    /// Gets or sets the sign-in type (e.g., "emailAddress", "userName", "federated").
+    /// サインインの種類（例: "emailAddress"、"userName"、"federated"）を取得または設定します。
     /// </summary>
     public string? SignInType { get; set; }
 
     /// <summary>
-    /// Gets or sets the issuer (e.g., tenant domain or external IdP).
+    /// 発行者（例: テナントドメインまたは外部IdP）を取得または設定します。
     /// </summary>
     public string? Issuer { get; set; }
 
     /// <summary>
-    /// Gets or sets the issuer-assigned ID (the actual identity value).
+    /// 発行者が割り当てたID（実際のID値）を取得または設定します。
     /// </summary>
     public string? IssuerAssignedId { get; set; }
 }

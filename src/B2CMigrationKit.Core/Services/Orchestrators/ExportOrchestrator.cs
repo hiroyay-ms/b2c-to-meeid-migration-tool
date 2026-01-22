@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace B2CMigrationKit.Core.Services.Orchestrators;
 
 /// <summary>
-/// Orchestrates the bulk export of users from Azure AD B2C to Blob Storage.
+/// Azure AD B2C から Blob Storage へのユーザーの一括エクスポートをオーケストレーションします。
 /// </summary>
 public class ExportOrchestrator : IOrchestrator<ExecutionResult>
 {

@@ -3,28 +3,28 @@
 namespace B2CMigrationKit.Core.Models;
 
 /// <summary>
-/// Represents a paged result from Microsoft Graph API.
+/// Microsoft Graph APIからのページング結果を表します。
 /// </summary>
-/// <typeparam name="T">The type of items in the result.</typeparam>
+/// <typeparam name="T">結果内のアイテムの型。</typeparam>
 public class PagedResult<T>
 {
     /// <summary>
-    /// Gets or sets the items in the current page.
+    /// 現在のページ内のアイテムを取得または設定します。
     /// </summary>
     public List<T> Items { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the skip token for retrieving the next page.
+    /// 次のページを取得するためのスキップトークンを取得または設定します。
     /// </summary>
     public string? NextPageToken { get; set; }
 
     /// <summary>
-    /// Gets whether there are more pages available.
+    /// さらにページがあるかどうかを取得します。
     /// </summary>
     public bool HasMorePages => !string.IsNullOrEmpty(NextPageToken);
 
     /// <summary>
-    /// Gets the count of items in the current page.
+    /// 現在のページ内のアイテム数を取得します。
     /// </summary>
     public int Count => Items.Count;
 }

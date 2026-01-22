@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Provides authentication services for validating credentials during JIT migration.
+/// JIT 移行中の資格情報検証のための認証サービスを提供します。
 /// </summary>
 public class AuthenticationService : IAuthenticationService
 {

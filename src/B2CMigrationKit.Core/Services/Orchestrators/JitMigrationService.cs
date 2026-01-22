@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace B2CMigrationKit.Core.Services.Orchestrators;
 
 /// <summary>
-/// Handles Just-In-Time migration of user credentials during first login.
+/// 初回ログイン時のユーザー資格情報の Just-In-Time 移行を処理します。
 /// </summary>
 public class JitMigrationService
 {
@@ -34,20 +34,20 @@ public class JitMigrationService
     }
 
     /// <summary>
-    /// Performs JIT migration for a user attempting to log in.
-    /// Called by External ID Custom Authentication Extension ONLY for users with RequiresMigration=true.
+    /// ログインを試みるユーザーの JIT 移行を実行します。
+    /// External ID カスタム認証拡張機能によって、RequiresMigration=true のユーザーに対してのみ呼び出されます。
     /// 
-    /// CRITICAL: Must complete within 2 seconds (External ID timeout).
-    /// Strategy: Validate credentials synchronously, update migration status asynchronously (fire-and-forget).
+    /// 重要: 2 秒以内に完了する必要があります（External ID タイムアウト）。
+    /// 戦略: 資格情報を同期的に検証し、移行ステータスを非同期で更新します（ファイア アンド フォーゲット）。
     /// 
-    /// When we return MigratePassword action, External ID updates the user's password.
-    /// We also need to mark RequiresMigration=false to prevent future JIT calls.
+    /// MigratePassword アクションを返すと、External ID がユーザーのパスワードを更新します。
+    /// また、将来の JIT 呼び出しを防ぐために RequiresMigration=false をマークする必要があります。
     /// </summary>
-    /// <param name="userId">External ID user ObjectId (from payload)</param>
-    /// <param name="userPrincipalName">User UPN for B2C validation</param>
-    /// <param name="password">Password provided by user during login</param>
-    /// <param name="correlationId">Optional correlation ID from External ID payload</param>
-    /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="userId">External ID ユーザー ObjectId（ペイロードから）</param>
+    /// <param name="userPrincipalName">B2C 検証用のユーザー UPN</param>
+    /// <param name="password">ログイン時にユーザーが提供したパスワード</param>
+    /// <param name="correlationId">External ID ペイロードからのオプションの相関 ID</param>
+    /// <param name="cancellationToken">キャンセル トークン</param>
     public async Task<JitMigrationResult> MigrateUserAsync(
         string userId,
         string userPrincipalName,
@@ -211,7 +211,7 @@ public class JitMigrationService
     }
 
     /// <summary>
-    /// Validates password complexity for External ID requirements.
+    /// External ID 要件のパスワード複雑性を検証します。
     /// </summary>
     private bool IsPasswordComplex(string password)
     {
@@ -233,7 +233,7 @@ public class JitMigrationService
 }
 
 /// <summary>
-/// Result of a JIT migration attempt.
+/// JIT 移行試行の結果。
 /// </summary>
 public class JitMigrationResult
 {

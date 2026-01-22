@@ -9,9 +9,9 @@ using System.Text.Json;
 namespace B2CMigrationKit.Core.Services.Infrastructure;
 
 /// <summary>
-/// Manages RSA public key export and validation for JIT authentication.
-/// RSA key pairs should be generated in Azure Key Vault for production use.
-/// This service helps export public keys and provides local key generation for testing only.
+/// JIT 認証用の RSA 公開キーのエクスポートと検証を管理します。
+/// RSA キー ペアは本番環境では Azure Key Vault で生成する必要があります。
+/// このサービスは公開キーのエクスポートを支援し、テスト専用のローカル キー生成を提供します。
 /// </summary>
 public class RsaKeyManager : IRsaKeyManager
 {
@@ -137,7 +137,7 @@ public class RsaKeyManager : IRsaKeyManager
     }
 
     /// <summary>
-    /// Base64URL encodes a byte array (used for JWK format).
+    /// バイト配列を Base64URL エンコードします（JWK 形式で使用）。
     /// </summary>
     private static string Base64UrlEncode(byte[] input)
     {

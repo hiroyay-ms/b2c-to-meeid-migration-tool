@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace B2CMigrationKit.Core.Services.Orchestrators;
 
 /// <summary>
-/// Handles asynchronous profile synchronization between B2C and External ID.
+/// B2C と External ID 間の非同期プロファイル同期を処理します。
 /// </summary>
 public class ProfileSyncService
 {
@@ -33,7 +33,7 @@ public class ProfileSyncService
     }
 
     /// <summary>
-    /// Queues a profile update message for async processing.
+    /// 非同期処理用のプロファイル更新メッセージをキューに入れます。
     /// </summary>
     public async Task QueueProfileUpdateAsync(
         ProfileUpdateMessage message,
@@ -60,7 +60,7 @@ public class ProfileSyncService
     }
 
     /// <summary>
-    /// Processes a profile update message from the queue.
+    /// キューからのプロファイル更新メッセージを処理します。
     /// </summary>
     public async Task<bool> ProcessProfileUpdateAsync(
         ProfileUpdateMessage message,
@@ -126,7 +126,7 @@ public class ProfileSyncService
     }
 
     /// <summary>
-    /// Polls the queue and processes profile update messages.
+    /// キューをポーリングし、プロファイル更新メッセージを処理します。
     /// </summary>
     public async Task ProcessQueueAsync(
         IGraphClient b2cClient,

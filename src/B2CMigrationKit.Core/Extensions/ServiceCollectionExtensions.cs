@@ -15,24 +15,24 @@ using Microsoft.Extensions.Options;
 namespace B2CMigrationKit.Core.Extensions;
 
 /// <summary>
-/// Extension methods for registering Core services in the DI container.
+/// DI コンテナーに Core サービスを登録するための拡張メソッド。
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers all Core library services with the DI container.
+    /// すべての Core ライブラリ サービスを DI コンテナーに登録します。
     /// </summary>
     public static IServiceCollection AddMigrationKitCore(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Register configuration
+        // 構成を登録
         services.Configure<MigrationOptions>(configuration.GetSection(MigrationOptions.SectionName));
         services.Configure<StorageOptions>(configuration.GetSection($"{MigrationOptions.SectionName}:Storage"));
         services.Configure<RetryOptions>(configuration.GetSection($"{MigrationOptions.SectionName}:Retry"));
         services.Configure<TelemetryOptions>(configuration.GetSection($"{MigrationOptions.SectionName}:Telemetry"));
 
-        // Register Application Insights (if configured)
+        // Application Insights を登録（構成されている場合）
         var telemetryOptions = configuration.GetSection($"{MigrationOptions.SectionName}:Telemetry").Get<TelemetryOptions>();
         if (telemetryOptions?.UseApplicationInsights == true && !string.IsNullOrEmpty(telemetryOptions.ConnectionString))
         {
@@ -41,29 +41,29 @@ public static class ServiceCollectionExtensions
                 ConnectionString = telemetryOptions.ConnectionString
             };
 
-            // Note: Sampling is best configured in Application Insights portal or via adaptive sampling
-            // For programmatic sampling, add Microsoft.ApplicationInsights.WindowsServer NuGet package
+            // 注: サンプリングは Application Insights ポータルまたはアダプティブ サンプリングで構成するのが最適です
+            // プログラムによるサンプリングには、Microsoft.ApplicationInsights.WindowsServer NuGet パッケージを追加してください
 
             services.AddSingleton(telemetryConfig);
             services.AddSingleton<TelemetryClient>();
         }
 
-        // Register infrastructure services
+        // インフラストラクチャ サービスを登録
         services.AddSingleton<ITelemetryService, TelemetryService>();
         services.AddSingleton<IRsaKeyManager, RsaKeyManager>();
 
-        // Register Key Vault (if configured)
+        // Key Vault を登録（構成されている場合）
         var kvOptions = configuration.GetSection("Migration:KeyVault").Get<KeyVaultOptions>();
         if (kvOptions != null && kvOptions.Enabled && !string.IsNullOrEmpty(kvOptions.VaultUri))
         {
             services.AddSingleton<ISecretProvider, SecretProvider>();
         }
 
-        // Register Azure Storage clients
+        // Azure Storage クライアントを登録
         services.AddSingleton<IBlobStorageClient, BlobStorageClient>();
         services.AddSingleton<IQueueClient, QueueClient>();
 
-        // Register B2C Credential Manager
+        // B2C Credential Manager を登録
         services.AddSingleton<ICredentialManager>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
@@ -77,7 +77,7 @@ public static class ServiceCollectionExtensions
                 logger);
         });
 
-        // Register External ID Credential Manager
+        // External ID Credential Manager を登録
         services.AddSingleton<ICredentialManager>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
@@ -91,13 +91,13 @@ public static class ServiceCollectionExtensions
                 logger);
         });
 
-        // Register Graph clients
+        // Graph クライアントを登録
         services.AddHttpClient();
 
         services.AddScoped<IGraphClient>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
-            // Get B2C credential manager (first registered)
+            // B2C Credential Manager を取得（最初に登録されたもの）
             var credManager = sp.GetRequiredService<IEnumerable<ICredentialManager>>().First();
             var telemetry = sp.GetRequiredService<ITelemetryService>();
             var factoryLogger = sp.GetRequiredService<ILogger<GraphClientFactory>>();
@@ -109,17 +109,17 @@ public static class ServiceCollectionExtensions
             return new GraphClient(graphServiceClient, sp.GetRequiredService<IOptions<RetryOptions>>(), clientLogger, telemetry);
         });
 
-        // Register authentication service
+        // 認証サービスを登録
         services.AddScoped<IAuthenticationService, AuthenticationService>();
 
-        // Register orchestrators and services
+        // オーケストレーターとサービスを登録
         services.AddScoped<ExportOrchestrator>();
 
-        // Register ImportOrchestrator with External ID Graph client
+        // External ID Graph クライアントで ImportOrchestrator を登録
         services.AddScoped<ImportOrchestrator>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
-            // Get External ID credential manager (second registered)
+            // External ID Credential Manager を取得（2番目に登録されたもの）
             var credManager = sp.GetRequiredService<IEnumerable<ICredentialManager>>().Last();
             var telemetry = sp.GetRequiredService<ITelemetryService>();
             var factoryLogger = sp.GetRequiredService<ILogger<GraphClientFactory>>();
@@ -135,7 +135,7 @@ public static class ServiceCollectionExtensions
             return new ImportOrchestrator(graphClient, blobClient, telemetry, Options.Create(options), orchestratorLogger);
         });
 
-        // Register JitMigrationService with External ID Graph client
+        // External ID Graph クライアントで JitMigrationService を登録
         services.AddScoped<JitMigrationService>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
@@ -143,7 +143,7 @@ public static class ServiceCollectionExtensions
             var telemetry = sp.GetRequiredService<ITelemetryService>();
             var logger = sp.GetRequiredService<ILogger<JitMigrationService>>();
 
-            // Create External ID credential manager
+            // External ID Credential Manager を作成
             var secretProvider = sp.GetService<ISecretProvider>();
             var credManagerLogger = sp.GetRequiredService<ILogger<CredentialManager>>();
             var externalIdCredManager = new CredentialManager(
@@ -152,7 +152,7 @@ public static class ServiceCollectionExtensions
                 secretProvider,
                 credManagerLogger);
 
-            // Create External ID Graph client
+            // External ID Graph クライアントを作成
             var factoryLogger = sp.GetRequiredService<ILogger<GraphClientFactory>>();
             var clientLogger = sp.GetRequiredService<ILogger<GraphClient>>();
             var retryOptions = sp.GetRequiredService<IOptions<RetryOptions>>();
@@ -170,7 +170,7 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers B2C-specific Graph client.
+    /// B2C 固有の Graph クライアントを登録します。
     /// </summary>
     public static IServiceCollection AddB2CGraphClient(this IServiceCollection services)
     {
@@ -178,7 +178,7 @@ public static class ServiceCollectionExtensions
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
             var credManager = sp.GetRequiredService<IEnumerable<ICredentialManager>>()
-                .First(); // B2C credential manager
+                .First(); // B2C Credential Manager
             var telemetry = sp.GetRequiredService<ITelemetryService>();
             var factoryLogger = sp.GetRequiredService<ILogger<GraphClientFactory>>();
             var clientLogger = sp.GetRequiredService<ILogger<GraphClient>>();
@@ -194,7 +194,7 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers External ID-specific Graph client.
+    /// External ID 固有の Graph クライアントを登録します。
     /// </summary>
     public static IServiceCollection AddExternalIdGraphClient(this IServiceCollection services)
     {
@@ -202,7 +202,7 @@ public static class ServiceCollectionExtensions
         {
             var options = sp.GetRequiredService<IOptions<MigrationOptions>>().Value;
             var credManager = sp.GetRequiredService<IEnumerable<ICredentialManager>>()
-                .Last(); // External ID credential manager
+                .Last(); // External ID Credential Manager
             var telemetry = sp.GetRequiredService<ITelemetryService>();
             var factoryLogger = sp.GetRequiredService<ILogger<GraphClientFactory>>();
             var clientLogger = sp.GetRequiredService<ILogger<GraphClient>>();
