@@ -3,15 +3,15 @@
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Represents an orchestrator for executing migration operations.
+/// 移行操作を実行するためのオーケストレータを表します。
 /// </summary>
-/// <typeparam name="TResult">The type of result returned by the orchestration.</typeparam>
+/// <typeparam name="TResult">オーケストレーションによって返される結果の型。</typeparam>
 public interface IOrchestrator<TResult>
 {
     /// <summary>
-    /// Executes the orchestration asynchronously.
+    /// オーケストレーションを非同期で実行します。
     /// </summary>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The result of the orchestration.</returns>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>オーケストレーションの結果。</returns>
     Task<TResult> ExecuteAsync(CancellationToken cancellationToken = default);
 }

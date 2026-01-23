@@ -3,17 +3,17 @@
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides access to Azure Blob Storage operations for migration data.
+/// 移行データ用の Azure Blob Storage 操作へのアクセスを提供します。
 /// </summary>
 public interface IBlobStorageClient
 {
     /// <summary>
-    /// Writes JSON content to a blob.
+    /// JSON コンテンツを Blob に書き込みます。
     /// </summary>
-    /// <param name="containerName">The container name.</param>
-    /// <param name="blobName">The blob name.</param>
-    /// <param name="jsonContent">The JSON content to write.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="containerName">コンテナ名。</param>
+    /// <param name="blobName">Blob 名。</param>
+    /// <param name="jsonContent">書き込む JSON コンテンツ。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task WriteBlobAsync(
         string containerName,
         string blobName,
@@ -21,46 +21,46 @@ public interface IBlobStorageClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Reads JSON content from a blob.
+    /// Blob から JSON コンテンツを読み取ります。
     /// </summary>
-    /// <param name="containerName">The container name.</param>
-    /// <param name="blobName">The blob name.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The JSON content of the blob.</returns>
+    /// <param name="containerName">コンテナ名。</param>
+    /// <param name="blobName">Blob 名。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>Blob の JSON コンテンツ。</returns>
     Task<string> ReadBlobAsync(
         string containerName,
         string blobName,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Lists all blobs in a container with an optional prefix.
+    /// オプションのプレフィックスを使用してコンテナ内のすべての Blob を一覧表示します。
     /// </summary>
-    /// <param name="containerName">The container name.</param>
-    /// <param name="prefix">Optional prefix to filter blobs.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>Collection of blob names.</returns>
+    /// <param name="containerName">コンテナ名。</param>
+    /// <param name="prefix">Blob をフィルタリングするためのオプションのプレフィックス。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>Blob 名のコレクション。</returns>
     Task<IEnumerable<string>> ListBlobsAsync(
         string containerName,
         string? prefix = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if a blob exists.
+    /// Blob が存在するかどうかを確認します。
     /// </summary>
-    /// <param name="containerName">The container name.</param>
-    /// <param name="blobName">The blob name.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>True if the blob exists, false otherwise.</returns>
+    /// <param name="containerName">コンテナ名。</param>
+    /// <param name="blobName">Blob 名。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>Blob が存在する場合は true、それ以外は false。</returns>
     Task<bool> BlobExistsAsync(
         string containerName,
         string blobName,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Ensures a container exists, creating it if necessary.
+    /// コンテナが存在することを確認し、必要に応じて作成します。
     /// </summary>
-    /// <param name="containerName">The container name.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="containerName">コンテナ名。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task EnsureContainerExistsAsync(
         string containerName,
         CancellationToken cancellationToken = default);

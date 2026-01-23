@@ -3,41 +3,41 @@
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides telemetry and observability services for the migration toolkit.
+/// 移行ツールキット用のテレメトリおよび可観測性サービスを提供します。
 /// </summary>
 public interface ITelemetryService
 {
     /// <summary>
-    /// Tracks a custom event.
+    /// カスタムイベントを追跡します。
     /// </summary>
-    /// <param name="eventName">The name of the event.</param>
-    /// <param name="properties">Optional properties associated with the event.</param>
+    /// <param name="eventName">イベントの名前。</param>
+    /// <param name="properties">イベントに関連付けられたオプションのプロパティ。</param>
     void TrackEvent(string eventName, IDictionary<string, string>? properties = null);
 
     /// <summary>
-    /// Tracks a metric value.
+    /// メトリック値を追跡します。
     /// </summary>
-    /// <param name="metricName">The name of the metric.</param>
-    /// <param name="value">The metric value.</param>
-    /// <param name="properties">Optional properties associated with the metric.</param>
+    /// <param name="metricName">メトリックの名前。</param>
+    /// <param name="value">メトリックの値。</param>
+    /// <param name="properties">メトリックに関連付けられたオプションのプロパティ。</param>
     void TrackMetric(string metricName, double value, IDictionary<string, string>? properties = null);
 
     /// <summary>
-    /// Tracks an exception.
+    /// 例外を追跡します。
     /// </summary>
-    /// <param name="exception">The exception to track.</param>
-    /// <param name="properties">Optional properties associated with the exception.</param>
+    /// <param name="exception">追跡する例外。</param>
+    /// <param name="properties">例外に関連付けられたオプションのプロパティ。</param>
     void TrackException(Exception exception, IDictionary<string, string>? properties = null);
 
     /// <summary>
-    /// Tracks a dependency call (e.g., to Microsoft Graph or Azure Storage).
+    /// 依存関係の呼び出しを追跡します（例: Microsoft Graph や Azure Storage への呼び出し）。
     /// </summary>
-    /// <param name="dependencyType">The type of dependency (e.g., "HTTP", "Azure Blob").</param>
-    /// <param name="target">The target of the dependency call.</param>
-    /// <param name="name">The name of the operation.</param>
-    /// <param name="data">Optional data about the call.</param>
-    /// <param name="duration">The duration of the call.</param>
-    /// <param name="success">Whether the call was successful.</param>
+    /// <param name="dependencyType">依存関係の種類（例: "HTTP"、"Azure Blob"）。</param>
+    /// <param name="target">依存関係呼び出しのターゲット。</param>
+    /// <param name="name">操作の名前。</param>
+    /// <param name="data">呼び出しに関するオプションのデータ。</param>
+    /// <param name="duration">呼び出しの所要時間。</param>
+    /// <param name="success">呼び出しが成功したかどうか。</param>
     void TrackDependency(
         string dependencyType,
         string target,
@@ -47,14 +47,14 @@ public interface ITelemetryService
         bool success);
 
     /// <summary>
-    /// Increments a counter metric.
+    /// カウンターメトリックをインクリメントします。
     /// </summary>
-    /// <param name="counterName">The name of the counter.</param>
-    /// <param name="increment">The amount to increment by (default 1).</param>
+    /// <param name="counterName">カウンターの名前。</param>
+    /// <param name="increment">インクリメントする量（デフォルトは 1）。</param>
     void IncrementCounter(string counterName, int increment = 1);
 
     /// <summary>
-    /// Flushes all telemetry data to ensure it's sent.
+    /// すべてのテレメトリデータをフラッシュして送信を確実にします。
     /// </summary>
     Task FlushAsync();
 }

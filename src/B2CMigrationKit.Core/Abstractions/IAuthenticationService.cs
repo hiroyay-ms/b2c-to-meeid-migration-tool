@@ -5,26 +5,26 @@ using B2CMigrationKit.Core.Models;
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides authentication services for validating credentials during JIT migration.
+/// JIT 移行時の資格情報検証のための認証サービスを提供します。
 /// </summary>
 public interface IAuthenticationService
 {
     /// <summary>
-    /// Validates user credentials against Azure AD B2C using ROPC flow.
+    /// ROPC フローを使用して Azure AD B2C に対してユーザー資格情報を検証します。
     /// </summary>
-    /// <param name="username">The username (email or UPN).</param>
-    /// <param name="password">The user's password.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>Authentication result indicating success or failure.</returns>
+    /// <param name="username">ユーザー名（メールアドレスまたは UPN）。</param>
+    /// <param name="password">ユーザーのパスワード。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>成功または失敗を示す認証結果。</returns>
     Task<AuthenticationResult> ValidateCredentialsAsync(
         string username,
         string password,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Validates that a password meets complexity requirements.
+    /// パスワードが複雑性要件を満たしているかどうかを検証します。
     /// </summary>
-    /// <param name="password">The password to validate.</param>
-    /// <returns>Validation result with any error messages.</returns>
+    /// <param name="password">検証するパスワード。</param>
+    /// <returns>エラーメッセージを含む検証結果。</returns>
     PasswordValidationResult ValidatePasswordComplexity(string password);
 }

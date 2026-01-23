@@ -5,19 +5,19 @@ using B2CMigrationKit.Core.Models;
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides access to Microsoft Graph API operations with built-in retry and throttling handling.
+/// 組み込みのリトライおよびスロットリング処理を備えた Microsoft Graph API 操作へのアクセスを提供します。
 /// </summary>
 public interface IGraphClient
 {
     /// <summary>
-    /// Gets users from the directory with paging support.
+    /// ページング対応でディレクトリからユーザーを取得します。
     /// </summary>
-    /// <param name="pageSize">Number of users to retrieve per page.</param>
-    /// <param name="select">Optional comma-separated list of properties to select.</param>
-    /// <param name="filter">Optional OData filter expression.</param>
-    /// <param name="skipToken">Optional skip token for pagination.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>A page of user profiles with a continuation token.</returns>
+    /// <param name="pageSize">ページごとに取得するユーザー数。</param>
+    /// <param name="select">選択するプロパティのカンマ区切りリスト（オプション）。</param>
+    /// <param name="filter">OData フィルター式（オプション）。</param>
+    /// <param name="skipToken">ページネーション用のスキップトークン（オプション）。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>継続トークン付きのユーザープロファイルのページ。</returns>
     Task<PagedResult<UserProfile>> GetUsersAsync(
         int pageSize = 100,
         string? select = null,
@@ -26,67 +26,67 @@ public interface IGraphClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Creates a new user in the directory.
+    /// ディレクトリに新しいユーザーを作成します。
     /// </summary>
-    /// <param name="user">The user profile to create.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The created user profile with assigned ID.</returns>
+    /// <param name="user">作成するユーザープロファイル。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>割り当てられた ID を持つ作成されたユーザープロファイル。</returns>
     Task<UserProfile> CreateUserAsync(
         UserProfile user,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Creates multiple users in a batch operation.
+    /// バッチ操作で複数のユーザーを作成します。
     /// </summary>
-    /// <param name="users">The collection of users to create.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>Results of the batch operation.</returns>
+    /// <param name="users">作成するユーザーのコレクション。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>バッチ操作の結果。</returns>
     Task<BatchResult> CreateUsersBatchAsync(
         IEnumerable<UserProfile> users,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Updates an existing user in the directory.
+    /// ディレクトリ内の既存ユーザーを更新します。
     /// </summary>
-    /// <param name="userId">The ID of the user to update.</param>
-    /// <param name="updates">Dictionary of property names and values to update.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="userId">更新するユーザーの ID。</param>
+    /// <param name="updates">更新するプロパティ名と値の辞書。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task UpdateUserAsync(
         string userId,
         Dictionary<string, object> updates,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets a user by their object ID.
+    /// オブジェクト ID でユーザーを取得します。
     /// </summary>
-    /// <param name="userId">The user's object ID.</param>
-    /// <param name="select">Optional comma-separated list of properties to select.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The user profile or null if not found.</returns>
+    /// <param name="userId">ユーザーのオブジェクト ID。</param>
+    /// <param name="select">選択するプロパティのカンマ区切りリスト（オプション）。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>ユーザープロファイル、見つからない場合は null。</returns>
     Task<UserProfile?> GetUserByIdAsync(
         string userId,
         string? select = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Searches for a user by extension attribute value.
+    /// 拡張属性値でユーザーを検索します。
     /// </summary>
-    /// <param name="extensionAttributeName">The name of the extension attribute.</param>
-    /// <param name="value">The value to search for.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The matching user profile or null if not found.</returns>
+    /// <param name="extensionAttributeName">拡張属性の名前。</param>
+    /// <param name="value">検索する値。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>一致するユーザープロファイル、見つからない場合は null。</returns>
     Task<UserProfile?> FindUserByExtensionAttributeAsync(
         string extensionAttributeName,
         string value,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sets a user's password.
+    /// ユーザーのパスワードを設定します。
     /// </summary>
-    /// <param name="userId">The user's object ID.</param>
-    /// <param name="password">The new password.</param>
-    /// <param name="forceChangePasswordNextSignIn">Whether to force password change on next sign-in.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="userId">ユーザーのオブジェクト ID。</param>
+    /// <param name="password">新しいパスワード。</param>
+    /// <param name="forceChangePasswordNextSignIn">次回サインイン時にパスワード変更を強制するかどうか。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task SetUserPasswordAsync(
         string userId,
         string password,

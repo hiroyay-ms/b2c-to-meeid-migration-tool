@@ -3,26 +3,26 @@
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides access to secrets stored in Azure Key Vault.
+/// Azure Key Vault に保存されたシークレットへのアクセスを提供します。
 /// </summary>
 public interface ISecretProvider
 {
     /// <summary>
-    /// Gets a secret value by name.
+    /// 名前でシークレット値を取得します。
     /// </summary>
-    /// <param name="secretName">The name of the secret.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>The secret value.</returns>
+    /// <param name="secretName">シークレットの名前。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>シークレットの値。</returns>
     Task<string> GetSecretAsync(
         string secretName,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sets a secret value.
+    /// シークレット値を設定します。
     /// </summary>
-    /// <param name="secretName">The name of the secret.</param>
-    /// <param name="secretValue">The value to store.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="secretName">シークレットの名前。</param>
+    /// <param name="secretValue">保存する値。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task SetSecretAsync(
         string secretName,
         string secretValue,

@@ -5,40 +5,40 @@ using B2CMigrationKit.Core.Models;
 namespace B2CMigrationKit.Core.Abstractions;
 
 /// <summary>
-/// Provides access to Azure Queue operations for async profile sync.
+/// 非同期プロファイル同期のための Azure Queue 操作へのアクセスを提供します。
 /// </summary>
 public interface IQueueClient
 {
     /// <summary>
-    /// Sends a profile update message to the queue.
+    /// プロファイル更新メッセージをキューに送信します。
     /// </summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="message">The profile update message.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="queueName">キュー名。</param>
+    /// <param name="message">プロファイル更新メッセージ。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task SendMessageAsync(
         string queueName,
         ProfileUpdateMessage message,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Receives messages from the queue.
+    /// キューからメッセージを受信します。
     /// </summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="maxMessages">Maximum number of messages to receive.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>Collection of profile update messages.</returns>
+    /// <param name="queueName">キュー名。</param>
+    /// <param name="maxMessages">受信するメッセージの最大数。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
+    /// <returns>プロファイル更新メッセージのコレクション。</returns>
     Task<IEnumerable<ProfileUpdateMessage>> ReceiveMessagesAsync(
         string queueName,
         int maxMessages = 1,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes a message from the queue after successful processing.
+    /// 処理が成功した後、キューからメッセージを削除します。
     /// </summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="messageId">The message ID.</param>
-    /// <param name="popReceipt">The pop receipt from the received message.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="queueName">キュー名。</param>
+    /// <param name="messageId">メッセージ ID。</param>
+    /// <param name="popReceipt">受信したメッセージのポップレシート。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task DeleteMessageAsync(
         string queueName,
         string messageId,
@@ -46,10 +46,10 @@ public interface IQueueClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Ensures a queue exists, creating it if necessary.
+    /// キューが存在することを確認し、必要に応じて作成します。
     /// </summary>
-    /// <param name="queueName">The queue name.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <param name="queueName">キュー名。</param>
+    /// <param name="cancellationToken">操作をキャンセルするためのトークン。</param>
     Task EnsureQueueExistsAsync(
         string queueName,
         CancellationToken cancellationToken = default);
