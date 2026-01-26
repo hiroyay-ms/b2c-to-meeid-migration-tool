@@ -1,3 +1,5 @@
+**English** | [日本語](README_jp.md)
+
 # B2C Migration Kit - Scripts
 
 This directory contains PowerShell scripts for local development, testing, and JIT migration setup.
